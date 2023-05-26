@@ -1,0 +1,19 @@
+state = {}
+
+function state:init()
+end
+
+function state:enter()
+end
+
+function state:leave(dt)
+end
+
+function state:resume(dt)
+end
+
+function state:update(dt)
+end
+
+function state:draw()
+end
