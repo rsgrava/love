@@ -12,18 +12,37 @@ function love.load()
     love.window.setTitle("love")
     love.graphics.setFont(assets.fonts.pixel_unicode(16))
     math.randomseed(os.time())
+
+    love.keyboard.pressed = {}
+    love.keyboard.released = {}
 end
 
 function love.update(dt)
-
+    love.keyboard.pressed = {}
+    love.keyboard.released = {}
 end
 
 function love.draw()
     push:start()
-        love.graphics.print("Hello World", 50, 50)
     push:finish()
 end
 
 function love.resize(w, h)
   push:resize(w, h)
+end
+
+function love.keypressed(key)
+    love.keyboard.pressed[key] = true
+end
+
+function love.keyreleased(key)
+    love.keyboard.released[key] = true
+end
+
+function love.keyboard.isPressed(key)
+    return love.keyboard.pressed[key]
+end
+
+function love.keyboard.isReleased(key)
+    return love.keyboard.released[key]
 end
