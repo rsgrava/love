@@ -1,4 +1,7 @@
 push = require("push")
+setmetatable(_G, {
+  __index = require("libs/cargo").init('/')
+})
 require "src/constants"
 
 function love.load()
@@ -7,6 +10,7 @@ function love.load()
     push:setupScreen(GAME_W, GAME_H, window_w, window_h,
                      {fullscreen = true, resizable = true, vsync = true})
     love.window.setTitle("love")
+    love.graphics.setFont(assets.fonts.pixel_unicode(16))
     math.randomseed(os.time())
 end
 
@@ -16,6 +20,7 @@ end
 
 function love.draw()
     push:start()
+        love.graphics.print("Hello World", 50, 50)
     push:finish()
 end
 
