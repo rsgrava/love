@@ -12,13 +12,13 @@ function love.load()
     push:setupScreen(GAME_W, GAME_H, window_w, window_h,
                      {fullscreen = true, resizable = true, vsync = true})
     love.window.setTitle("love")
-    love.graphics.setFont(assets.fonts.pixel_unicode(16))
+    love.graphics.setFont(assets.fonts.public_pixel(8))
     math.randomseed(os.time())
 
     love.keyboard.pressed = {}
     love.keyboard.released = {}
 
-    Gamestate.switch(menu)
+    Gamestate.switch(menuState)
 end
 
 function love.update(dt)
