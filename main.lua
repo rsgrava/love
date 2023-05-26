@@ -1,8 +1,10 @@
-push = require("push")
+push = require("libs/push")
 setmetatable(_G, {
   __index = require("libs/cargo").init('/')
 })
+Gamestate = require("libs/gamestate")
 require "src/constants"
+require "src/states/menu"
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -15,15 +17,20 @@ function love.load()
 
     love.keyboard.pressed = {}
     love.keyboard.released = {}
+
+    Gamestate.switch(menu)
 end
 
 function love.update(dt)
+    Gamestate.current():update(dt)
+    love.keyboard.pressed = {}
     love.keyboard.pressed = {}
     love.keyboard.released = {}
 end
 
 function love.draw()
     push:start()
+        Gamestate.current():draw(dt)
     push:finish()
 end
 
