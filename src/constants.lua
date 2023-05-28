@@ -1,3 +1,5 @@
+GAME_TITLE = "LOVE"
+
 GAME_W = 256
 GAME_H = 224
 
