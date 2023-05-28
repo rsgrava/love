@@ -59,61 +59,65 @@ function Menu:clampSelection()
     end
 end
 
-function Menu:update(dt)
-    local dir = ""
-    if love.keyboard.isPressed("z") then
-        if self.confirm_sound ~= nil then
-            love.audio.play(self.confirm_sound)
-        end
-    elseif love.keyboard.isPressed("x") then
-        if self.cancel_sound ~= nil then
-            love.audio.play(self.cancel_sound)
-        end
-    elseif love.keyboard.isPressed("up") then
-        self.selection_y = self.selection_y - 1
-        if self.selection_y < 0 then
-            self.selection_y = 0
-            self.top_row = math.max(self.top_row - 1, 0)
-        elseif self.move_sound ~= nil then
-            love.audio.play(self.move_sound)
-        end
-        self:clampSelection()
-
-    elseif love.keyboard.isPressed("down") then
-        self.selection_y = self.selection_y + 1
-        if self.selection_y > self.rows - 1 then
-            self.selection_y = self.rows - 1
-            self.top_row = self.top_row + 1
-            if self.top_row > self.total_rows - self.rows then
-                self.top_row = self.total_rows - self.rows
-            end
-        elseif self.move_sound ~= nil then
-            love.audio.play(self.move_sound)
-        end
-        self:clampSelection()
-
-    elseif love.keyboard.isPressed("left") then
-        self.selection_x = self.selection_x - 1
-        if self.selection_x < 0 then
-            self.selection_x = 0
-        elseif self.move_sound ~= nil then
-            love.audio.play(self.move_sound)
-        end
-        self:clampSelection()
-
-    elseif love.keyboard.isPressed("right") then
-        self.selection_x = self.selection_x + 1
-        if self.selection_x > self.cols - 1 then
-            self.selection_x = self.cols - 1
-        elseif self.move_sound ~= nil then
-            love.audio.play(self.move_sound)
-        end
-        self:clampSelection()
+function Menu:onConfirm()
+    if self.confirm_sound ~= nil then
+        love.audio.play(self.confirm_sound)
     end
+end
 
+function Menu:onCancel()
+    if self.cancel_sound ~= nil then
+        love.audio.play(self.cancel_sound)
+    end
+end
+
+function Menu:onUp()
+    self.selection_y = self.selection_y - 1
+    if self.selection_y < 0 then
+        self.selection_y = 0
+        self.top_row = math.max(self.top_row - 1, 0)
+    elseif self.move_sound ~= nil then
+        love.audio.play(self.move_sound)
+    end
+    self:clampSelection()
+end
+
+function Menu:onDown()
+    self.selection_y = self.selection_y + 1
+    if self.selection_y > self.rows - 1 then
+        self.selection_y = self.rows - 1
+        self.top_row = self.top_row + 1
+        if self.top_row > self.total_rows - self.rows then
+            self.top_row = self.total_rows - self.rows
+        end
+    elseif self.move_sound ~= nil then
+        love.audio.play(self.move_sound)
+    end
+    self:clampSelection()
+end
+
+function Menu:onLeft()
+    self.selection_x = self.selection_x - 1
+    if self.selection_x < 0 then
+        self.selection_x = 0
+    elseif self.move_sound ~= nil then
+        love.audio.play(self.move_sound)
+    end
+    self:clampSelection()
+end
+
+function Menu:onRight()
+    self.selection_x = self.selection_x + 1
+    if self.selection_x > self.cols - 1 then
+        self.selection_x = self.cols - 1
+    elseif self.move_sound ~= nil then
+        love.audio.play(self.move_sound)
+    end
+    self:clampSelection()
 end
 
 function Menu:draw()
+    -- draw menu frame
     for y = 0, self.height - 1 do
         for x = 0, self.width - 1 do
             local quad = 4
@@ -138,6 +142,7 @@ function Menu:draw()
         end
     end
 
+    -- draw menu items
     local top_left_item = self.top_row * self.cols
     local bottom_right_item = self.rows * self.cols + top_left_item
     bottom_right_item = math.min(#self.items, bottom_right_item)
@@ -148,8 +153,8 @@ function Menu:draw()
         local x = key % self.cols
         local y = math.floor(key / self.cols)
         love.graphics.print(item, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H + self.padding_y)
-        ::continue::
     end
 
+    -- draw selection pointer
     love.graphics.draw(self.pointer_tex, self.x + self.selection_x * TILE_W * (self.itemWidth + 1), self.y + self.selection_y * TILE_H + TILE_H + self.padding_y)
 end
