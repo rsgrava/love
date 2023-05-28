@@ -52,14 +52,22 @@ function Menu:setPos(x, y)
     self.y = y
 end
 
+function Menu:getCurrentItem()
+    return self.top_row * self.cols + self.selection_y * self.cols + self.selection_x
+end
+
 function Menu:clampSelection()
-    if self.top_row * self.cols + self.selection_y * self.cols + self.selection_x >= #self.items then
+    if self:getCurrentItem() >= #self.items then
         self.selection_y = math.floor(#self.items / self.cols) - self.top_row
         self.selection_x = #self.items % self.cols - 1
     end
 end
 
 function Menu:onConfirm()
+    local func = self.items[self:getCurrentItem() + 1].onConfirm
+    if func ~= nil then
+        func()
+    end
     if self.confirm_sound ~= nil then
         love.audio.play(self.confirm_sound)
     end
