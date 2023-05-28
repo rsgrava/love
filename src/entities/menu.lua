@@ -15,12 +15,15 @@ function Menu:init(defs)
     self.selection_x = defs.selection_x or 0
     self.selection_y = defs.selection_y or 0
     self.padding_y = defs.padding_y or 4
+    self.move_sound = defs.move_sound or nil
+    self.confirm_sound = defs.confirm_sound or nil
+    self.cancel_sound = defs.cancel_sound or nil
     self.items = defs.items or {}
 
     self.itemWidth = 0
     self.itemHeight = 0
     for k, v in pairs(defs.items) do
-        local len = math.ceil(love.graphics.getFont():getWidth(v) / TILE_W)
+        local len = math.ceil(love.graphics.getFont():getWidth(v.name) / TILE_W)
         if len > self.itemWidth then
             self.itemWidth = len
         end
@@ -59,14 +62,20 @@ end
 function Menu:update(dt)
     local dir = ""
     if love.keyboard.isPressed("z") then
-
+        if self.confirm_sound ~= nil then
+            love.audio.play(self.confirm_sound)
+        end
     elseif love.keyboard.isPressed("x") then
-
+        if self.cancel_sound ~= nil then
+            love.audio.play(self.cancel_sound)
+        end
     elseif love.keyboard.isPressed("up") then
         self.selection_y = self.selection_y - 1
         if self.selection_y < 0 then
             self.selection_y = 0
             self.top_row = math.max(self.top_row - 1, 0)
+        elseif self.move_sound ~= nil then
+            love.audio.play(self.move_sound)
         end
         self:clampSelection()
 
@@ -78,15 +87,27 @@ function Menu:update(dt)
             if self.top_row > self.total_rows - self.rows then
                 self.top_row = self.total_rows - self.rows
             end
+        elseif self.move_sound ~= nil then
+            love.audio.play(self.move_sound)
         end
         self:clampSelection()
 
     elseif love.keyboard.isPressed("left") then
-        self.selection_x = math.max(self.selection_x - 1, 0)
+        self.selection_x = self.selection_x - 1
+        if self.selection_x < 0 then
+            self.selection_x = 0
+        elseif self.move_sound ~= nil then
+            love.audio.play(self.move_sound)
+        end
         self:clampSelection()
 
     elseif love.keyboard.isPressed("right") then
-        self.selection_x = math.min(self.selection_x + 1, self.cols - 1)
+        self.selection_x = self.selection_x + 1
+        if self.selection_x > self.cols - 1 then
+            self.selection_x = self.cols - 1
+        elseif self.move_sound ~= nil then
+            love.audio.play(self.move_sound)
+        end
         self:clampSelection()
     end
 
@@ -122,13 +143,13 @@ function Menu:draw()
     bottom_right_item = math.min(#self.items, bottom_right_item)
     local visible_items = bottom_right_item - top_left_item
     for i = 1, visible_items do
-        item = self.items[top_left_item + i]
+        item = self.items[top_left_item + i].name
         key = i - 1
         local x = key % self.cols
         local y = math.floor(key / self.cols)
-        love.graphics.print(item, x * TILE_W * (self.itemWidth + 1) + TILE_W, (y + 1) * TILE_H + self.padding_y)
+        love.graphics.print(item, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H + self.padding_y)
         ::continue::
     end
 
-    love.graphics.draw(self.pointer_tex, self.selection_x * TILE_W * (self.itemWidth + 1), self.selection_y * TILE_H + TILE_H + self.padding_y)
+    love.graphics.draw(self.pointer_tex, self.x + self.selection_x * TILE_W * (self.itemWidth + 1), self.y + self.selection_y * TILE_H + TILE_H + self.padding_y)
 end
