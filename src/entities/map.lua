@@ -7,7 +7,8 @@ Map = Class{}
 function Map:init(map)
     self.tilesets = {}
     self.tileset_quads = {}
-    self.layers = {}
+    self.bg_layers = {}
+    self.fg_layers = {}
     self.tileset_ids = {}
     self.collision = {}
     self.width = map.width
@@ -19,7 +20,7 @@ function Map:init(map)
         self.tileset_quads[k] = generateQuads(self.tilesets[k], TILE_W, TILE_H)
     end
 
-    for layer_id, layer in ipairs(map.layers) do
+    for _, layer in ipairs(map.layers) do
         if layer.type == "tilelayer" then
             if layer.name == "collision" then
                 for tile_id, tile in ipairs(layer.data) do
@@ -29,22 +30,42 @@ function Map:init(map)
                         self.collision[tile_id] = 1
                     end
                 end
-            else
-                self.layers[layer_id] = {}
-                self.tileset_ids[layer_id] = {}
+            elseif layer.name:sub(1, #"fg_") == "fg_" then
+                self.fg_layers[layer.id] = {}
+                self.tileset_ids[layer.id] = {}
                 for tile_id, tile in ipairs(layer.data) do
                     for tileset_id, tileset in ipairs(map.tilesets) do
                         if tile == 0 then
-                            self.layers[layer_id][tile_id] = 0
-                            self.tileset_ids[layer_id][tile_id] = 0
+                            self.fg_layers[layer.id][tile_id] = 0
+                            self.tileset_ids[layer.id][tile_id] = 0
                             break
                         elseif tile < tileset.firstgid then
-                            self.layers[layer_id][tile_id] = tile - map.tilesets[tileset_id - 1].firstgid
-                            self.tileset_ids[layer_id][tile_id] = tileset_id - 1
+                            self.fg_layers[layer.id][tile_id] = tile - map.tilesets[tileset_id - 1].firstgid
+                            self.tileset_ids[layer.id][tile_id] = tileset_id - 1
                             break
                         elseif tileset_id == #map.tilesets then
-                            self.layers[layer_id][tile_id] = tile - map.tilesets[tileset_id].firstgid
-                            self.tileset_ids[layer_id][tile_id] = tileset_id
+                            self.fg_layers[layer.id][tile_id] = tile - map.tilesets[tileset_id].firstgid
+                            self.tileset_ids[layer.id][tile_id] = tileset_id
+                            break
+                        end
+                    end
+                end
+            else
+                self.bg_layers[layer.id] = {}
+                self.tileset_ids[layer.id] = {}
+                for tile_id, tile in ipairs(layer.data) do
+                    for tileset_id, tileset in ipairs(map.tilesets) do
+                        if tile == 0 then
+                            self.bg_layers[layer.id][tile_id] = 0
+                            self.tileset_ids[layer.id][tile_id] = 0
+                            break
+                        elseif tile < tileset.firstgid then
+                            self.bg_layers[layer.id][tile_id] = tile - map.tilesets[tileset_id - 1].firstgid
+                            self.tileset_ids[layer.id][tile_id] = tileset_id - 1
+                            break
+                        elseif tileset_id == #map.tilesets then
+                            self.bg_layers[layer.id][tile_id] = tile - map.tilesets[tileset_id].firstgid
+                            self.tileset_ids[layer.id][tile_id] = tileset_id
                             break
                         end
                     end
@@ -65,22 +86,32 @@ end
 function Map:update(dt)
 end
 
-function Map:draw()
-    for layer_id, layer in ipairs(self.layers) do
-        for tile_id, tile in ipairs(layer) do
-            if tile ~= 0 then
-                local tileset_id = self.tileset_ids[layer_id][tile_id]
-                local texture = self.tilesets[tileset_id]
-                local quad = self.tileset_quads[tileset_id][tile]
-                local x = (tile_id - 1) % self.width
-                local y = math.floor((tile_id - 1) / self.width)
-                love.graphics.draw(
-                    texture,
-                    quad,
-                    x * TILE_W,
-                    y * TILE_H
-                )
-            end
+function Map:drawLower()
+    for layer_id, layer in pairs(self.bg_layers) do
+        self:drawLayer(layer_id, layer)
+    end
+end
+
+function Map:drawUpper()
+    for layer_id, layer in pairs(self.fg_layers) do
+        self:drawLayer(layer_id, layer)
+    end
+end
+
+function Map:drawLayer(layer_id, layer)
+    for tile_id, tile in ipairs(layer) do
+        if tile ~= 0 then
+            local tileset_id = self.tileset_ids[layer_id][tile_id]
+            local texture = self.tilesets[tileset_id]
+            local quad = self.tileset_quads[tileset_id][tile]
+            local x = (tile_id - 1) % self.width
+            local y = math.floor((tile_id - 1) / self.width)
+            love.graphics.draw(
+                texture,
+                quad,
+                x * TILE_W,
+                y * TILE_H
+            )
         end
     end
 end
