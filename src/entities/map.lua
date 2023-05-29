@@ -22,7 +22,13 @@ function Map:init(map)
     for layer_id, layer in ipairs(map.layers) do
         if layer.type == "tilelayer" then
             if layer.name == "collision" then
-
+                for tile_id, tile in ipairs(layer.data) do
+                    if tile == 0 then
+                        self.collision[tile_id] = 0
+                    else
+                        self.collision[tile_id] = 1
+                    end
+                end
             else
                 self.layers[layer_id] = {}
                 self.tileset_ids[layer_id] = {}
@@ -47,6 +53,13 @@ function Map:init(map)
         elseif layer.type == "objects" then
         end
     end
+end
+
+function Map:collides(x, y)
+    if self.collision[x + y * self.width + 1] ~= 0 then
+        return true
+    end
+    return false
 end
 
 function Map:update(dt)
