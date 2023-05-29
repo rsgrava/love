@@ -22,40 +22,75 @@ function Character:init(defs)
     self.y = defs.tile_y * TILE_H - CHARACTER_H + TILE_H
 end
 
-function Character:tryMoveUp()
-    if self.state == "idle" then
+function Character:tryMoveUp(map)
+    if self.state ~= "idle" then
+        return
+    end
+    self.direction = "up"
+    if not self:collides(map) then
         self.state = "move"
-        self.direction = "up"
         self.tile_y = self.tile_y - 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {y = self.y - TILE_W}})
     end
 end
 
-function Character:tryMoveDown()
-    if self.state == "idle" then
+function Character:tryMoveDown(map)
+    if self.state ~= "idle" then
+        return
+    end
+    self.direction = "down"
+    if not self:collides(map) then
         self.state = "move"
-        self.direction = "down"
         self.tile_y = self.tile_y + 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {y = self.y + TILE_W}})
     end
 end
 
-function Character:tryMoveLeft()
-    if self.state == "idle" then
+function Character:tryMoveLeft(map)
+    if self.state ~= "idle" then
+        return
+    end
+    self.direction = "left"
+    if not self:collides(map) then
         self.state = "move"
-        self.direction = "left"
         self.tile_x = self.tile_x - 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {x = self.x - TILE_W}})
     end
 end
 
-function Character:tryMoveRight()
-    if self.state == "idle" then
+function Character:tryMoveRight(map)
+    if self.state ~= "idle" then
+        return
+    end
+    self.direction = "right"
+    if not self:collides(map) then
         self.state = "move"
-        self.direction = "right"
         self.tile_x = self.tile_x + 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {x = self.x + TILE_W}})
     end
+end
+
+function Character:collides(map)
+    local target_x = self.tile_x
+    local target_y = self.tile_y
+    
+    if self.direction == "up" then
+        target_y = self.tile_y - 1
+    elseif self.direction == "down" then
+        target_y = self.tile_y + 1
+    elseif self.direction == "left" then
+        target_x = self.tile_x - 1
+    elseif self.direction == "right" then
+        target_x = self.tile_x + 1
+    end
+
+    if target_x < 0 or target_y < 0 or
+       target_x > map.width - 1 or target_y > map.height
+       or map:collides(target_x, target_y) then
+       return true
+   end
+
+   return false
 end
 
 function Character:update(dt)
