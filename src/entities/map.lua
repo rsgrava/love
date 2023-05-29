@@ -16,7 +16,7 @@ function Map:init(map)
     for k, tileset in ipairs(map.tilesets) do
         tileset = require("assets/tilesets/"..tileset.name)
         self.tilesets[k] = assets.graphics[tileset.name]
-        self.tileset_quads[k] = generateQuads(self.tilesets[k])
+        self.tileset_quads[k] = generateQuads(self.tilesets[k], TILE_W, TILE_H)
     end
 
     for layer_id, layer in ipairs(map.layers) do
