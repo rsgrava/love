@@ -10,7 +10,7 @@ function Menu:init(defs)
     self.cols = math.min(defs.cols, #defs.items)
     self.rows = defs.rows
     self.frame_tex = defs.frame_tex
-    self.quads = generateQuads(defs.frame_tex)
+    self.quads = generateQuads(defs.frame_tex, TILE_W, TILE_H)
     self.pointer_tex = defs.pointer_tex
     self.selection_x = defs.selection_x or 0
     self.selection_y = defs.selection_y or 0
@@ -18,6 +18,7 @@ function Menu:init(defs)
     self.move_sound = defs.move_sound or nil
     self.confirm_sound = defs.confirm_sound or nil
     self.cancel_sound = defs.cancel_sound or nil
+    self.disabled_sound = defs.disabled_sound or nil
     self.items = defs.items or {}
 
     self.itemWidth = 0
@@ -64,16 +65,27 @@ function Menu:clampSelection()
 end
 
 function Menu:onConfirm()
-    local func = self.items[self:getCurrentItem() + 1].onConfirm
-    if func ~= nil then
-        func()
-    end
-    if self.confirm_sound ~= nil then
-        love.audio.play(self.confirm_sound)
+    local item = self.items[self:getCurrentItem() + 1]
+    if item.enabled then
+        local func = self.items[self:getCurrentItem() + 1].onConfirm
+        if func ~= nil then
+            func()
+        end
+        if self.confirm_sound ~= nil then
+            love.audio.play(self.confirm_sound)
+        end
+    else
+        if self.disabled_sound ~= nil then
+            love.audio.play(self.disabled_sound)
+        end
     end
 end
 
 function Menu:onCancel()
+    local func = self.items[self:getCurrentItem() + 1].onCancel
+    if func ~= nil then
+        func()
+    end
     if self.cancel_sound ~= nil then
         love.audio.play(self.cancel_sound)
     end
@@ -156,11 +168,15 @@ function Menu:draw()
     bottom_right_item = math.min(#self.items, bottom_right_item)
     local visible_items = bottom_right_item - top_left_item
     for i = 1, visible_items do
-        item = self.items[top_left_item + i].name
+        item = self.items[top_left_item + i]
         key = i - 1
         local x = key % self.cols
         local y = math.floor(key / self.cols)
-        love.graphics.print(item, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H + self.padding_y)
+        if not item.enabled then
+            love.graphics.setColor(love.math.colorFromBytes(128, 128, 128))
+        end
+        love.graphics.print(item.name, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H + self.padding_y)
+        love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
     end
 
     -- draw selection pointer
