@@ -1,4 +1,5 @@
 Class = require("libs/class")
+Timer = require("libs/timer")
 require "src/constants"
 require "src/utils"
 
@@ -11,13 +12,28 @@ function Map:init(map)
     self.fg_layers = {}
     self.tileset_ids = {}
     self.collision = {}
+    self.animations = {}
+    self.fg_animation_instances = {}
+    self.bg_animation_instances = {}
+    self.animations_enabled = true
     self.width = map.width
     self.height = map.height
 
-    for k, tileset in ipairs(map.tilesets) do
+    for tileset_id, tileset in ipairs(map.tilesets) do
         tileset = require("assets/tilesets/"..tileset.name)
-        self.tilesets[k] = assets.graphics[tileset.name]
-        self.tileset_quads[k] = generateQuads(self.tilesets[k], TILE_W, TILE_H)
+        self.tilesets[tileset_id] = assets.graphics[tileset.name]
+        self.tileset_quads[tileset_id] = generateQuads(self.tilesets[tileset_id], TILE_W, TILE_H)
+        self.animations[tileset_id] = {}
+        for tile_id, tile in pairs(tileset.tiles) do
+            local animation = {}
+            animation.frames = {}
+            animation.timings = {}
+            for frame_id, frame in pairs(tile.animation) do
+                animation.frames[frame_id] = frame.tileid
+                animation.timings[frame_id] = frame.duration / 1000
+            end
+            self.animations[tileset_id][tile.id] = animation
+        end
     end
 
     for _, layer in ipairs(map.layers) do
@@ -52,6 +68,7 @@ function Map:init(map)
                 end
             else
                 self.bg_layers[layer.id] = {}
+                self.bg_animation_instances[layer.id] = {}
                 self.tileset_ids[layer.id] = {}
                 for tile_id, tile in ipairs(layer.data) do
                     for tileset_id, tileset in ipairs(map.tilesets) do
@@ -69,6 +86,20 @@ function Map:init(map)
                             break
                         end
                     end
+                    local tileset_id = self.tileset_ids[layer.id][tile_id]
+                    local tile = self.bg_layers[layer.id][tile_id]
+                    if tileset_id ~= 0 then
+                        for anim_id, anim in pairs(self.animations[tileset_id]) do
+                            if anim_id == tile then
+                                self.bg_animation_instances[layer.id][tile_id] = {
+                                    frame = 1,
+                                    tileset_id = tileset_id,
+                                    anim_id = anim_id,
+                                    timer = 0,
+                                }
+                            end
+                        end
+                    end
                 end
             end
         elseif layer.type == "objects" then
@@ -84,6 +115,23 @@ function Map:collides(x, y)
 end
 
 function Map:update(dt)
+    if self.animations_enabled then
+        for layer_id, layer in pairs(self.bg_animation_instances) do
+            for tile_id, instance in pairs(self.bg_animation_instances[layer_id]) do
+                instance.timer = instance.timer + dt
+                local animation = self.animations[instance.tileset_id][instance.anim_id]
+                local timing = animation.timings[instance.frame]
+                if instance.timer > timing then
+                    instance.timer = 0
+                    instance.frame = instance.frame + 1
+                    if instance.frame > #animation.frames then
+                        instance.frame = 1
+                    end
+                    self.bg_layers[layer_id][tile_id] = animation.frames[instance.frame]
+                end
+            end
+        end
+    end
 end
 
 function Map:drawLower()
