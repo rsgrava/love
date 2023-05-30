@@ -14,7 +14,7 @@ function exploration:enter()
             tile_y = 0
         }
     )
-    self.map = Map(assets.maps.big)
+    self.map = Map(assets.maps.test)
     self.camera = Camera()
     self.ignoredDir = "none"
 end
@@ -138,5 +138,5 @@ function exploration:centerCamera()
         end
     end
 
-    self.camera:lookAt(cam_x + CAMERA_OFFSET_X, cam_y + CAMERA_OFFSET_Y)
+    self.camera:lookAt(cam_x + love.graphics.getWidth() / 2, cam_y + love.graphics.getHeight() / 2)
 end
