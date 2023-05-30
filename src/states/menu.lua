@@ -12,12 +12,32 @@ function menuState:enter()
     self.menu = Menu:init({
             x = 0,
             y = 0,
-            rows = 1,
-            cols = 3,
+            rows = 3,
+            cols = 1,
             frame_tex = assets.graphics.menu,
             pointer_tex = assets.graphics.hand_pointer,
-            items = {"Dummy1", "Dummy2", "Dummy3", "Dummy4", "Dummy5", "Dummy6", "Dummy7"}
+            move_sound = assets.audio.move_cursor,
+            confirm_sound = assets.audio.confirm,
+            cancel_sound = assets.audio.cancel,
+            disabled_sound = assets.audio.disabled,
+            items = {
+                {
+                    name = "Start Game",
+                    onConfirm = function() Gamestate.switch(exploration) end,
+                    enabled = true
+                },
+                {
+                    name = "Options",
+                    enabled = false
+                },
+                {
+                    name = "Quit",
+                    onConfirm = function() love.event.quit() end,
+                    enabled = true
+                },
+            }
         })
+    self.menu:setPos((GAME_W - self.menu:getWidth()) / 2, (GAME_H - self.menu:getHeight()) / 2)
 end
 
 function menuState:leave()
@@ -27,40 +47,23 @@ function menuState:resume()
 end
 
 function menuState:update(dt)
-    self.menu:update(dt)
+    if love.keyboard.isPressed("z") then
+        self.menu:onConfirm()
+    elseif love.keyboard.isPressed("x") then
+        self.menu:onCancel()
+    elseif love.keyboard.isPressed("up") then
+        self.menu:onUp()
+    elseif love.keyboard.isPressed("down") then
+        self.menu:onDown()
+    elseif love.keyboard.isPressed("left") then
+        self.menu:onLeft()
+    elseif love.keyboard.isPressed("right") then
+        self.menu:onRight()
+    end
 end
 
 function menuState:draw()
     self.menu:draw()
+    local font = love.graphics.getFont()
+    love.graphics.print(GAME_TITLE, (GAME_W - font:getWidth(GAME_TITLE)) / 2, TILE_H * 3 - font:getHeight(GAME_TITLE) / 2)
 end
-
---[[
-function menu:update(dt)
-    if love.keyboard.isPressed("up") then
-        self.selection = self.selection - 1
-        if self.selection < 0 then
-            self.selection = 1
-        end
-    elseif love.keyboard.isPressed("down") then
-        self.selection = (self.selection + 1) % 2
-    elseif love.keyboard.isPressed("z") then
-        if self.selection == 0 then
-            Gamestate.switch(exploration)
-        elseif self.selection == 1 then
-            love.event.quit()
-        end
-    end
-end
-
-function menu:draw()
-    font = love.graphics.getFont()
-    love.graphics.print("LOVE", (GAME_W - font:getWidth("LOVE")) / 2, (GAME_H / 4))
-    love.graphics.print("Start Game", 50, TILE_H * 10)
-    love.graphics.print("Quit", 50, TILE_H * 11)
-    if self.selection == 0 then
-        love.graphics.print(">", 45, TILE_H * 10)
-    elseif self.selection == 1 then
-        love.graphics.print(">", 45, TILE_H * 11)
-    end
-end
---]]
