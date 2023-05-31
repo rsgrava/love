@@ -43,17 +43,17 @@ end
 function ActorManager.draw()
     table.sort(ActorManager.actors, function(a, b) return a.y < b.y end)
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.priority == "below" then
+        if actor.priority == "low" then
             actor:draw()
         end
     end
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.priority == "same" then
+        if actor.priority == "mid" then
             actor:draw()
         end
     end
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.priority == "above" then
+        if actor.priority == "high" then
             actor:draw()
         end
     end
