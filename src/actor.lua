@@ -280,7 +280,10 @@ function Actor:collides()
        return true
     end
 
-    return ActorManager.checkCollision(target_x, target_y)
+    if self.through then
+        return false
+    end
+    return ActorManager.checkCollision(self.priority, target_x, target_y)
 end
 
 function Actor:update(dt)
