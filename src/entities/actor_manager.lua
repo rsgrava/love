@@ -1,5 +1,3 @@
-require("src/entities/actor")
-
 ActorManager = {
     actors = {}
 }

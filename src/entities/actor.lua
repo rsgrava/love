@@ -1,6 +1,7 @@
 Class = require("libs/class")
 require("src/constants")
 require("src/sprite")
+require("src/entities/map")
 
 Actor = Class{}
 
@@ -59,56 +60,55 @@ function Actor:tryActivate()
     self.active = self:checkCondition()
 end
 
-function Actor:tryMoveUp(map)
+function Actor:tryMoveUp()
     if self.state ~= "idle" then
         return
     end
     self.direction = "up"
-    if not self:collides(map) then
+    if not self:collides() then
         self.state = "move"
         self.tile_y = self.tile_y - 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {y = self.y - TILE_W}})
     end
 end
 
-function Actor:tryMoveDown(map)
+function Actor:tryMoveDown()
     if self.state ~= "idle" then
         return
     end
     self.direction = "down"
-    if not self:collides(map) then
+    if not self:collides() then
         self.state = "move"
         self.tile_y = self.tile_y + 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {y = self.y + TILE_W}})
     end
 end
 
-function Actor:tryMoveLeft(map)
+function Actor:tryMoveLeft()
     if self.state ~= "idle" then
         return
     end
     self.direction = "left"
-    if not self:collides(map) then
+    if not self:collides() then
         self.state = "move"
         self.tile_x = self.tile_x - 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {x = self.x - TILE_W}})
     end
 end
 
-function Actor:tryMoveRight(map)
+function Actor:tryMoveRight()
     if self.state ~= "idle" then
         return
     end
     self.direction = "right"
-    if not self:collides(map) then
-        print("PENIS")
+    if not self:collides() then
         self.state = "move"
         self.tile_x = self.tile_x + 1
         Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {x = self.x + TILE_W}})
     end
 end
 
-function Actor:collides(map)
+function Actor:collides()
     local target_x = self.tile_x
     local target_y = self.tile_y
     
@@ -123,8 +123,8 @@ function Actor:collides(map)
     end
 
     if target_x < 0 or target_y < 0 or
-       target_x > map.width - 1 or target_y > map.height
-       or map:collides(target_x, target_y) then
+       target_x > Map.width - 1 or target_y > Map.height
+       or Map:collides(target_x, target_y) then
        return true
     end
 

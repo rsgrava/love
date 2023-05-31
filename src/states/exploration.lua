@@ -1,5 +1,6 @@
 Camera = require("libs/camera")
 Timer = require("libs/timer")
+require("src/entities/actor")
 require("src/entities/actor_manager")
 require("src/entities/map")
 
@@ -8,7 +9,7 @@ exploration = {}
 function exploration:enter()
     self.player = Actor(assets.actors.player, {}, 0, 0)
     ActorManager.add(self.player)
-    self.map = Map(assets.maps.test)
+    Map.load(assets.maps.test)
     self.camera = Camera()
     self.ignoredDir = "none"
 end
@@ -16,13 +17,13 @@ end
 function exploration:update(dt)
     local direction = self:getDirInput()
     if direction == "up" then
-        self.player:tryMoveUp(self.map)
+        self.player:tryMoveUp()
     elseif direction == "down" then
-        self.player:tryMoveDown(self.map)
+        self.player:tryMoveDown()
     elseif direction == "left" then
-        self.player:tryMoveLeft(self.map)
+        self.player:tryMoveLeft()
     elseif direction == "right" then
-        self.player:tryMoveRight(self.map)
+        self.player:tryMoveRight()
     end
 
     if love.keyboard.isPressed("z") then
@@ -40,16 +41,16 @@ function exploration:update(dt)
     end
 
     Timer.update(dt)
-    self.map:update(dt)
+    Map:update(dt)
     ActorManager.update(dt)
     self:centerCamera()
 end
 
 function exploration:draw()
     self.camera:attach()
-        self.map:drawLower()
+        Map:drawLower()
         ActorManager.draw()
-        self.map:drawUpper()
+        Map:drawUpper()
     self.camera:detach()
 end
 
@@ -122,8 +123,8 @@ end
 function exploration:centerCamera()
     local cam_x = self.player.x + (CHARACTER_W - GAME_W) / 2
     local cam_y = self.player.y + (CHARACTER_H - GAME_H) / 2
-    local map_width = self.map.width * TILE_W
-    local map_height = self.map.height * TILE_W
+    local map_width = Map.width * TILE_W
+    local map_height = Map.height * TILE_W
 
     if cam_x < 0 then
         cam_x = 0
