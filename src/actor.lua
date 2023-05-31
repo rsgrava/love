@@ -64,82 +64,98 @@ function Actor:tryActivate()
 end
 
 function Actor:tryMoveUp()
-    if self.state ~= "idle" then
-        return
+    if self.state == "idle" then
+        if not self.directionFix then
+            self.direction = "up"
+        end
+        if not self:collides() then
+            self.state = "move"
+            if self.animated ~= "fixed" then
+                self.sprite:resume()
+            end
+            self.tile_y = self.tile_y - 1
+            Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y - TILE_W}})
+            return true
+        end
     end
-    if not self.directionFix then
-        self.direction = "up"
-    end
-    if not self:collides() then
-        self.state = "move"
-        self.tile_y = self.tile_y - 1
-        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y - TILE_W}})
-    end
+    return false
 end
 
 function Actor:tryMoveDown()
-    if self.state ~= "idle" then
-        return
+    if self.state == "idle" then
+        if not self.directionFix then
+            self.direction = "down"
+        end
+        if not self:collides() then
+            self.state = "move"
+            if self.animated ~= "fixed" then
+                self.sprite:resume()
+            end
+            self.tile_y = self.tile_y + 1
+            Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y + TILE_W}})
+            return true
+        end
     end
-    if not self.directionFix then
-        self.direction = "down"
-    end
-    if not self:collides() then
-        self.state = "move"
-        self.tile_y = self.tile_y + 1
-        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y + TILE_W}})
-    end
+    return false
 end
 
 function Actor:tryMoveLeft()
-    if self.state ~= "idle" then
-        return
+    if self.state == "idle" then
+        if not self.directionFix then
+            self.direction = "left"
+        end
+        if not self:collides() then
+            self.state = "move"
+            if self.animated ~= "fixed" then
+                self.sprite:resume()
+            end
+            self.tile_x = self.tile_x - 1
+            Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W}})
+            return true
+        end
     end
-    if not self.directionFix then
-        self.direction = "left"
-    end
-    if not self:collides() then
-        self.state = "move"
-        self.tile_x = self.tile_x - 1
-        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W}})
-    end
+    return false
 end
 
 function Actor:tryMoveRight()
-    if self.state ~= "idle" then
-        return
+    if self.state == "idle" then
+        if not self.directionFix then
+            self.direction = "right"
+        end
+        if not self:collides() then
+            self.state = "move"
+            if self.animated ~= "fixed" then
+                self.sprite:resume()
+            end
+            self.tile_x = self.tile_x + 1
+            Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W}})
+            return true
+        end
     end
-    if not self.directionFix then
-        self.direction = "right"
-    end
-    if not self:collides() then
-        self.state = "move"
-        self.tile_x = self.tile_x + 1
-        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W}})
-    end
+    return false
 end
 
 function Actor:tryMoveForward()
     if self.direction == "up" then
-        self:tryMoveUp()
+        return self:tryMoveUp()
     elseif self.direction == "down" then
-        self:tryMoveDown()
+        return self:tryMoveDown()
     elseif self.direction == "left" then
-        self:tryMoveLeft()
+        return self:tryMoveLeft()
     elseif self.direction == "right" then
-        self:tryMoveRight()
+        return self:tryMoveRight()
     end
 end
 
 function Actor:tryMoveBackward()
     if self.direction == "up" then
-        self:tryMoveDown()
+        return self:tryMoveDown()
     elseif self.direction == "down" then
-        self:tryMoveUp()
+        return self:tryMoveUp()
     elseif self.direction == "left" then
-        self:tryMoveRight()
+        return self:tryMoveRight()
     elseif self.direction == "right" then
-        self:tryMoveLeft()
+        return self:tryMoveLeft()
     end
 end
 
@@ -147,13 +163,13 @@ function Actor:tryMoveRandom()
     if self.state == "idle" then
         local rand = math.random(1, 4)
         if rand == 1 then
-            self:tryMoveUp()
+            return self:tryMoveUp()
         elseif rand == 2 then
-            self:tryMoveDown()
+            return self:tryMoveDown()
         elseif rand == 3 then
-            self:tryMoveLeft()
+            return self:tryMoveLeft()
         elseif rand == 4 then
-            self:tryMoveRight()
+            return self:tryMoveRight()
         end
     end
 end
