@@ -1,19 +1,13 @@
 Camera = require("libs/camera")
 Timer = require("libs/timer")
-require("src/entities/character")
+require("src/entities/actor_manager")
 require("src/entities/map")
 
 exploration = {}
 
 function exploration:enter()
-    self.player = Character(
-        {
-            texture = assets.graphics.player,
-            animation = assets.animations.player,
-            tile_x = 0,
-            tile_y = 0
-        }
-    )
+    self.player = Actor(assets.actors.player, {}, 0, 0)
+    ActorManager.add(self.player)
     self.map = Map(assets.maps.test)
     self.camera = Camera()
     self.ignoredDir = "none"
@@ -30,16 +24,31 @@ function exploration:update(dt)
     elseif direction == "right" then
         self.player:tryMoveRight(self.map)
     end
+
+    if love.keyboard.isPressed("z") then
+        if self.player.state == "idle" then
+            if self.player.direction == "up" then
+                ActorManager.tryAction(self.player.tile_x, self.player.tile_y - 1)
+            elseif self.player.direction == "down" then
+                ActorManager.tryAction(self.player.tile_x, self.player.tile_y + 1)
+            elseif self.player.direction == "left" then
+                ActorManager.tryAction(self.player.tile_x - 1, self.player.tile_y)
+            elseif self.player.direction == "right" then
+                ActorManager.tryAction(self.player.tile_x + 1, self.player.tile_y)
+            end
+        end
+    end
+
     Timer.update(dt)
     self.map:update(dt)
-    self.player:update(dt)
+    ActorManager.update(dt)
     self:centerCamera()
 end
 
 function exploration:draw()
     self.camera:attach()
         self.map:drawLower()
-        self.player:draw()
+        ActorManager.draw()
         self.map:drawUpper()
     self.camera:detach()
 end
