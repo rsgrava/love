@@ -68,17 +68,19 @@ function Actor:tryMoveUp()
         if not self.directionFix then
             self.direction = "up"
         end
-        if not self:collides() then
+        if self:collides() then
+            return "collides"
+        else
             self.state = "move"
             if self.animated ~= "fixed" then
                 self.sprite:resume()
             end
             self.tile_y = self.tile_y - 1
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y - TILE_W}})
-            return true
+            return "moved"
         end
     end
-    return false
+    return "busy"
 end
 
 function Actor:tryMoveDown()
@@ -86,17 +88,19 @@ function Actor:tryMoveDown()
         if not self.directionFix then
             self.direction = "down"
         end
-        if not self:collides() then
+        if self:collides() then
+            return "collides"
+        else
             self.state = "move"
             if self.animated ~= "fixed" then
                 self.sprite:resume()
             end
             self.tile_y = self.tile_y + 1
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y + TILE_W}})
-            return true
+            return "moved"
         end
     end
-    return false
+    return "busy"
 end
 
 function Actor:tryMoveLeft()
@@ -104,17 +108,19 @@ function Actor:tryMoveLeft()
         if not self.directionFix then
             self.direction = "left"
         end
-        if not self:collides() then
+        if self:collides() then
+            return "collides"
+        else
             self.state = "move"
             if self.animated ~= "fixed" then
                 self.sprite:resume()
             end
             self.tile_x = self.tile_x - 1
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W}})
-            return true
+            return "moved"
         end
     end
-    return false
+    return "busy"
 end
 
 function Actor:tryMoveRight()
@@ -122,17 +128,19 @@ function Actor:tryMoveRight()
         if not self.directionFix then
             self.direction = "right"
         end
-        if not self:collides() then
+        if self:collides() then
+            return "collides"
+        else
             self.state = "move"
             if self.animated ~= "fixed" then
                 self.sprite:resume()
             end
             self.tile_x = self.tile_x + 1
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W}})
-            return true
+            return "moved"
         end
     end
-    return false
+    return "busy"
 end
 
 function Actor:tryMoveForward()
@@ -322,7 +330,7 @@ function Actor:update(dt)
             moved = self:tryMoveToPlayer()
         elseif self.moveType == "custom" then
         end
-        if moved then
+        if moved ~= "busy" then
             self.timer = 0
         end
     end
