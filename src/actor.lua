@@ -18,13 +18,15 @@ function Actor:init(actor, props, tile_x, tile_y)
 
     -- Sprite definitions
     self.direction = actor.direction or "down"
+    self.width = actor.width
+    self.height = actor.height
     if actor.texture ~= nil then
         self.sprite = Sprite({
                 texture = actor.texture,
                 animation = actor.animation,
                 firstAnim = self.state..'_'..self.direction,
-                width = actor.width,
-                height = actor.height,
+                width = self.width,
+                height = self.height,
             })
     else
         self.sprite = nil
@@ -70,7 +72,7 @@ function Actor:tryMoveUp()
     if not self:collides() then
         self.state = "move"
         self.tile_y = self.tile_y - 1
-        Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {y = self.y - TILE_W}})
+        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y - TILE_W}})
     end
 end
 
@@ -84,7 +86,7 @@ function Actor:tryMoveDown()
     if not self:collides() then
         self.state = "move"
         self.tile_y = self.tile_y + 1
-        Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {y = self.y + TILE_W}})
+        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y + TILE_W}})
     end
 end
 
@@ -98,7 +100,7 @@ function Actor:tryMoveLeft()
     if not self:collides() then
         self.state = "move"
         self.tile_x = self.tile_x - 1
-        Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {x = self.x - TILE_W}})
+        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W}})
     end
 end
 
@@ -112,7 +114,7 @@ function Actor:tryMoveRight()
     if not self:collides() then
         self.state = "move"
         self.tile_x = self.tile_x + 1
-        Timer.tween(CHARACTER_MOVE_DURATION, {[self] = {x = self.x + TILE_W}})
+        Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W}})
     end
 end
 
@@ -286,11 +288,11 @@ function Actor:update(dt)
     else
         self.sprite:setAnimation(self.state..'_'..self.direction)
     end
-    if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - CHARACTER_H + TILE_H == self.y then
+    if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
     end
     if self.animated ~= "fixed" then
-        self.sprite:update(dt)
+        self.sprite:update(dt * self.speed)
     end
 
     if self.active then
