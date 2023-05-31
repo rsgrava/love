@@ -160,31 +160,31 @@ function Actor:tryJump()
 end
 
 function Actor:tryFaceUp()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         self.direction = "up"
     end
 end
 
 function Actor:tryFaceDown()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         self.direction = "down"
     end
 end
 
 function Actor:tryFaceLeft()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         self.direction = "left"
     end
 end
 
 function Actor:tryFaceRight()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         self.direction = "right"
     end
 end
 
 function Actor:tryTurn90Left()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         if self.direction == "up" then
             self.direction = "left"
         elseif self.direction == "down" then
@@ -198,7 +198,7 @@ function Actor:tryTurn90Left()
 end
 
 function Actor:tryTurn90Right()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         if self.direction == "up" then
             self.direction = "right"
         elseif self.direction == "down" then
@@ -212,7 +212,7 @@ function Actor:tryTurn90Right()
 end
 
 function Actor:tryTurn180()
-    if self.state == "idle" then
+    if self.state == "idle" and not self.directionFix then
         if self.direction == "up" then
             self.direction = "down"
         elseif self.direction == "down" then
