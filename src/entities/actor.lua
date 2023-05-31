@@ -108,6 +108,147 @@ function Actor:tryMoveRight()
     end
 end
 
+function Actor:tryMoveForward()
+    if self.direction == "up" then
+        self:tryMoveUp()
+    elseif self.direction == "down" then
+        self:tryMoveDown()
+    elseif self.direction == "left" then
+        self:tryMoveLeft()
+    elseif self.direction == "right" then
+        self:tryMoveRight()
+    end
+end
+
+function Actor:tryMoveBackward()
+    if self.direction == "up" then
+        self:tryMoveDown()
+    elseif self.direction == "down" then
+        self:tryMoveUp()
+    elseif self.direction == "left" then
+        self:tryMoveRight()
+    elseif self.direction == "right" then
+        self:tryMoveLeft()
+    end
+end
+
+function Actor:tryMoveRandom()
+    if self.state == "idle" then
+        local rand = math.random(1, 4)
+        if rand == 1 then
+            self:tryMoveUp()
+        elseif rand == 2 then
+            self:tryMoveDown()
+        elseif rand == 3 then
+            self:tryMoveLeft()
+        elseif rand == 4 then
+            self:tryMoveRight()
+        end
+    end
+end
+
+function Actor:tryMoveToPlayer()
+    -- TODO
+end
+
+function Actor:tryMoveAwayFromPlayer()
+    -- TODO
+end
+
+function Actor:tryJump()
+    -- TODO
+end
+
+function Actor:tryFaceUp()
+    if self.state == "idle" then
+        self.direction = "up"
+    end
+end
+
+function Actor:tryFaceDown()
+    if self.state == "idle" then
+        self.direction = "down"
+    end
+end
+
+function Actor:tryFaceLeft()
+    if self.state == "idle" then
+        self.direction = "left"
+    end
+end
+
+function Actor:tryFaceRight()
+    if self.state == "idle" then
+        self.direction = "right"
+    end
+end
+
+function Actor:tryTurn90Left()
+    if self.state == "idle" then
+        if self.direction == "up" then
+            self.direction = "left"
+        elseif self.direction == "down" then
+            self.direction = "right"
+        elseif self.direction == "left" then
+            self.direction = "down"
+        elseif self.direction == "right" then
+            self.direction = "up"
+        end
+    end
+end
+
+function Actor:tryTurn90Right()
+    if self.state == "idle" then
+        if self.direction == "up" then
+            self.direction = "right"
+        elseif self.direction == "down" then
+            self.direction = "left"
+        elseif self.direction == "left" then
+            self.direction = "up"
+        elseif self.direction == "right" then
+            self.direction = "down"
+        end
+    end
+end
+
+function Actor:tryTurn180()
+    if self.state == "idle" then
+        if self.direction == "up" then
+            self.direction = "down"
+        elseif self.direction == "down" then
+            self.direction = "up"
+        elseif self.direction == "left" then
+            self.direction = "right"
+        elseif self.direction == "right" then
+            self.direction = "left"
+        end
+    end
+end
+
+function Actor:tryFaceRandom()
+    if self.state == "idle" then
+        local rand = math.random(1, 4)
+        if rand == 1 then
+            self:tryFaceUp()
+        elseif rand == 2 then
+            self:tryFaceDown()
+        elseif rand == 3 then
+            self:tryFaceLeft()
+        elseif rand == 4 then
+            self:tryFaceRight()
+        end
+    end
+end
+
+function Actor:tryFacePlayer()
+    -- TODO
+end
+
+function Actor:tryFaceAwayFromPlayer()
+    -- TODO
+end
+
+
 function Actor:collides()
     local target_x = self.tile_x
     local target_y = self.tile_y
