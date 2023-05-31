@@ -24,7 +24,7 @@ function Actor:init(actor, props, tile_x, tile_y)
         self.sprite = Sprite({
                 texture = actor.texture,
                 animation = actor.animation,
-                firstAnim = self.state..'_'..self.direction,
+                firstAnim = self.direction,
                 width = self.width,
                 height = self.height,
             })
@@ -283,11 +283,12 @@ function Actor:collides()
 end
 
 function Actor:update(dt)
-    if self.animated == "always" then
-        self.sprite:setAnimation("move"..'_'..self.direction)
-    else
-        self.sprite:setAnimation(self.state..'_'..self.direction)
+    self.sprite:setAnimation(self.direction)
+    if self.animated ~= "always" and self.state == "idle" then
+        self.sprite:pause()
     end
+    self.sprite:update(dt)
+
     if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
     end
