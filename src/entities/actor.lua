@@ -8,19 +8,21 @@ Actor = Class{}
 function Actor:init(actor, props, tile_x, tile_y)
     -- General definitions
     self.name = actor.name
-    self.trigger = actor.trigger
+    self.trigger = actor.trigger or nil
     self.script = actor.script or nil
     self.condition = actor.condition or nil
     self.props = props
     self.active = false
     self.routine = nil
+    self.state = "idle"
 
     -- Sprite definitions
+    self.direction = actor.direction or "down"
     if actor.texture ~= nil then
         self.sprite = Sprite({
                 texture = actor.texture,
                 animation = actor.animation,
-                firstAnim = actor.firstAnim,
+                firstAnim = self.state..'_'..self.direction,
                 width = actor.width,
                 height = actor.height,
             })
@@ -40,8 +42,6 @@ function Actor:init(actor, props, tile_x, tile_y)
     self.freq = actor.freq or 3
     
     -- Positioning
-    self.state = "idle"
-    self.direction = "down"
     self.tile_x = tile_x
     self.tile_y = tile_y
     self.x = self.tile_x * TILE_W - actor.width + TILE_W
