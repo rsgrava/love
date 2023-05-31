@@ -7,6 +7,7 @@ function Animation:init(animationSet, firstAnim)
     self.anim = firstAnim
     self.frame = 1
     self.timer = 0
+    self.paused = false
 end
 
 function Animation:getFrame()
@@ -21,13 +22,31 @@ function Animation:setAnimation(anim)
     end
 end
 
-function Animation:update(dt)
-    self.timer = self.timer + dt
-    if self.timer > self.animationSet[self.anim].timings[self.frame] then
+function Animation:pause()
+    if not self.paused then
+        self.paused = true
+        self.frame = 1
         self.timer = 0
-        self.frame = self.frame + 1
-        if self.frame > #self.animationSet[self.anim].frames then
-            self.frame = 1
+    end
+end
+
+function Animation:resume()
+    if self.paused then
+        self.paused = false
+        self.frame = 1
+        self.timer = 0
+    end
+end
+
+function Animation:update(dt)
+    if not self.paused then
+        self.timer = self.timer + dt
+        if self.timer > self.animationSet[self.anim].timings[self.frame] then
+            self.timer = 0
+            self.frame = self.frame + 1
+            if self.frame > #self.animationSet[self.anim].frames then
+                self.frame = 1
+            end
         end
     end
 end

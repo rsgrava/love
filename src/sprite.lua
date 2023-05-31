@@ -14,6 +14,14 @@ function Sprite:setAnimation(anim)
     self.animation:setAnimation(anim)
 end
 
+function Sprite:pause()
+    self.animation:pause()
+end
+
+function Sprite:resume()
+    self.animation:resume()
+end
+
 function Sprite:update(dt)
     self.animation:update(dt)
 end
