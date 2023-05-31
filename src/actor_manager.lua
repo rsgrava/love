@@ -16,9 +16,20 @@ function ActorManager.checkCollision(layer, tile_x, tile_y)
     return false
 end
 
-function ActorManager.tryAction(tile_x, tile_y)
+function ActorManager.tryAction(playerDirection, tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.trigger == "action" and actor.tile_x == tile_x and actor.tile_y == tile_y then
+            if not actor.directionFix then
+                if playerDirection == "up" then
+                    actor.direction = "down"
+                elseif playerDirection == "down" then
+                    actor.direction = "up"
+                elseif playerDirection == "left" then
+                    actor.direction = "right"
+                elseif playerDirection == "right" then
+                    actor.direction = "left"
+                end
+            end
             actor:tryActivate()
             break
         end
