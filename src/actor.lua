@@ -64,7 +64,9 @@ function Actor:tryMoveUp()
     if self.state ~= "idle" then
         return
     end
-    self.direction = "up"
+    if not self.directionFix then
+        self.direction = "up"
+    end
     if not self:collides() then
         self.state = "move"
         self.tile_y = self.tile_y - 1
@@ -76,7 +78,9 @@ function Actor:tryMoveDown()
     if self.state ~= "idle" then
         return
     end
-    self.direction = "down"
+    if not self.directionFix then
+        self.direction = "down"
+    end
     if not self:collides() then
         self.state = "move"
         self.tile_y = self.tile_y + 1
@@ -88,7 +92,9 @@ function Actor:tryMoveLeft()
     if self.state ~= "idle" then
         return
     end
-    self.direction = "left"
+    if not self.directionFix then
+        self.direction = "left"
+    end
     if not self:collides() then
         self.state = "move"
         self.tile_x = self.tile_x - 1
@@ -100,7 +106,9 @@ function Actor:tryMoveRight()
     if self.state ~= "idle" then
         return
     end
-    self.direction = "right"
+    if not self.directionFix then
+        self.direction = "right"
+    end
     if not self:collides() then
         self.state = "move"
         self.tile_x = self.tile_x + 1
@@ -273,11 +281,17 @@ function Actor:collides()
 end
 
 function Actor:update(dt)
-    self.sprite:setAnimation(self.state..'_'..self.direction)
+    if self.animated == "always" then
+        self.sprite:setAnimation("move"..'_'..self.direction)
+    else
+        self.sprite:setAnimation(self.state..'_'..self.direction)
+    end
     if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - CHARACTER_H + TILE_H == self.y then
         self.state = "idle"
     end
-    self.sprite:update(dt)
+    if self.animated ~= "fixed" then
+        self.sprite:update(dt)
+    end
 
     if self.active then
         if self.script ~= nil then
