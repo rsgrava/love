@@ -1,7 +1,7 @@
 Gamestate = require("libs/gamestate")
 require "src/constants"
 require "src/states/exploration"
-require "src/entities/menu"
+require "src/menu"
 
 menuState = {}
 

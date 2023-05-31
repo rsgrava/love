@@ -1,7 +1,7 @@
 Timer = require("libs/timer")
 require "src/constants"
 require "src/utils"
-require "src/entities/actor_manager"
+require "src/actor_manager"
 
 Map = {}
 

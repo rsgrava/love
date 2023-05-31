@@ -1,8 +1,8 @@
 Camera = require("libs/camera")
 Timer = require("libs/timer")
-require("src/entities/actor")
-require("src/entities/actor_manager")
-require("src/entities/map")
+require("src/actor")
+require("src/actor_manager")
+require("src/map")
 
 exploration = {}
 

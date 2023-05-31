@@ -1,7 +1,7 @@
 Class = require("libs/class")
 require("src/constants")
 require("src/sprite")
-require("src/entities/map")
+require("src/map")
 
 Actor = Class{}
 
