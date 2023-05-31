@@ -39,9 +39,10 @@ function Actor:init(actor, props, tile_x, tile_y)
     self.through = actor.through or false
 
     -- Movement
-    self.movType = actor.movType or "fixed"
-    self.speed = actor.speed or 3
-    self.freq = actor.freq or 3
+    self.moveType = actor.moveType or "fixed"
+    self.speed = actor.speed or 1
+    self.freq = actor.freq or 1
+    self.timer = 0
     
     -- Positioning
     self.tile_x = tile_x
@@ -292,8 +293,19 @@ function Actor:update(dt)
     if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
     end
-    if self.animated ~= "fixed" then
-        self.sprite:update(dt * self.speed)
+
+    self.timer = self.timer + self.freq * dt
+    if self.timer > ACTOR_MOVE_DELAY then
+        local moved = false
+        if self.moveType == "random" then
+            moved = self:tryMoveRandom()
+        elseif self.moveType == "approach" then
+            moved = self:tryMoveToPlayer()
+        elseif self.moveType == "custom" then
+        end
+        if moved then
+            self.timer = 0
+        end
     end
 
     if self.active then
