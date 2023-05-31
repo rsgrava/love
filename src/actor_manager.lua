@@ -6,9 +6,9 @@ function ActorManager.add(actor)
     table.insert(ActorManager.actors, actor)
 end
 
-function ActorManager.checkCollision(tile_x, tile_y)
+function ActorManager.checkCollision(layer, tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.priority == "same" and not actor.through and
+        if actor.priority == layer and not actor.through and
            actor.tile_x == tile_x and actor.tile_y == tile_y then
             return true
         end
