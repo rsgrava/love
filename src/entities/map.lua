@@ -2,6 +2,7 @@ Class = require("libs/class")
 Timer = require("libs/timer")
 require "src/constants"
 require "src/utils"
+require "src/entities/actor_manager"
 
 Map = Class{}
 
@@ -102,7 +103,14 @@ function Map:init(map)
                     end
                 end
             end
-        elseif layer.type == "objects" then
+        elseif layer.type == "objectgroup" then
+            for object_id, object in pairs(layer.objects) do
+                local actor = assets.actors[object.name]
+                local props = object.properties
+                local tile_x = math.floor(object.x / TILE_W)
+                local tile_y = math.floor(object.y / TILE_H) - 1
+                ActorManager.add(Actor(actor, props, tile_x, tile_y))
+            end
         end
     end
 end
