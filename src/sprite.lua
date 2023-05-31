@@ -22,7 +22,7 @@ function Sprite:draw(x, y)
     love.graphics.draw(
         self.texture,
         self.quads[self.animation:getFrame()],
-        x,
-        y
+        math.floor(x),
+        math.floor(y)
     )
 end
