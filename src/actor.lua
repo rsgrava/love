@@ -525,6 +525,9 @@ function Actor:update(dt)
 
     if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
+        if self.trigger == "player" then
+            ActorManager.tryTouchLowHigh(self.tile_x, self.tile_y)
+        end
     end
 
     self.timer = self.timer + self.freq * dt

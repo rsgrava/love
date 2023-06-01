@@ -17,13 +17,21 @@ end
 function exploration:update(dt)
     local direction = self:getDirInput()
     if direction == "up" then
-        self.player:tryMoveUp()
+        if self.player:tryMoveUp() == "collides" then
+            ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y - 1)
+        end
     elseif direction == "down" then
-        self.player:tryMoveDown()
+        if self.player:tryMoveDown() == "collides" then
+            ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y + 1)
+        end
     elseif direction == "left" then
-        self.player:tryMoveLeft()
+        if self.player:tryMoveLeft() == "collides" then
+            ActorManager.tryTouchMid(self.player.tile_x - 1, self.player.tile_y)
+        end
     elseif direction == "right" then
-        self.player:tryMoveRight()
+        if self.player:tryMoveRight() == "collides" then
+            ActorManager.tryTouchMid(self.player.tile_x + 1, self.player.tile_y)
+        end
     end
 
     if love.keyboard.isPressed("z") then
