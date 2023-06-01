@@ -1,6 +1,5 @@
 Class = require("libs/class")
 require("src/utils")
-require("src/animation")
 
 Sprite = Class{}
 
