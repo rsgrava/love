@@ -16,6 +16,14 @@ function ActorManager.checkCollision(layer, tile_x, tile_y)
     return false
 end
 
+function ActorManager.getPlayer()
+    for actorId, actor in pairs(ActorManager.actors) do
+        if actor.trigger == "player" then
+            return actor
+        end
+    end
+end
+
 function ActorManager.tryAction(playerDirection, tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.trigger == "action" and actor.tile_x == tile_x and actor.tile_y == tile_y then
@@ -54,6 +62,13 @@ function ActorManager.tryTouchLowHigh(tile_x, tile_y)
             actor:tryActivate()
             break
         end
+    end
+end
+
+function ActorManager.tryEventTouch(actor, tile_x, tile_y)
+    local player = ActorManager.getPlayer()
+    if player.tile_x == tile_x and player.tile_y == tile_y then
+        actor:tryActivate()
     end
 end
 

@@ -523,10 +523,14 @@ function Actor:update(dt)
     end
     self.sprite:update(dt)
 
-    if self.tile_x * TILE_W == self.x and self.tile_y * TILE_H - self.height + TILE_H == self.y then
+    if self.state ~= "idle" and self.tile_x * TILE_W == self.x
+       and self.tile_y * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
         if self.trigger == "player" then
             ActorManager.tryTouchLowHigh(self.tile_x, self.tile_y)
+        elseif self.trigger == "event_touch" and 
+               (self.priority == "low" or self.priority == "high") then
+            ActorManager.tryEventTouch(self, self.tile_x, self.tile_y)
         end
     end
 
@@ -542,6 +546,17 @@ function Actor:update(dt)
         end
         if moved ~= "busy" then
             self.timer = 0
+        end
+        if moved == "collides" and self.trigger == "event_touch" then
+            if self.direction == "up" then
+                ActorManager.tryEventTouch(self, self.tile_x, self.tile_y - 1)
+            elseif self.direction == "down" then
+                ActorManager.tryEventTouch(self, self.tile_x, self.tile_y + 1)
+            elseif self.direction == "left" then
+                ActorManager.tryEventTouch(self, self.tile_x - 1, self.tile_y)
+            elseif self.direction == "right" then
+                ActorManager.tryEventTouch(self, self.tile_x + 1, self.tile_y)
+            end
         end
     end
 
