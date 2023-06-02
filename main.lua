@@ -3,9 +3,10 @@ setmetatable(_G, {
   __index = require("libs/cargo").init('/')
 })
 Gamestate = require("libs/gamestate")
-require "libs/slam"
-require "src/constants"
-require "src/states/menu"
+local baton = require ("libs/baton")
+require("libs/slam")
+require("src/constants")
+require("src/states/menu")
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -16,18 +17,16 @@ function love.load()
     love.graphics.setFont(assets.fonts.public_pixel(8))
     math.randomseed(os.time())
 
-    love.keyboard.pressed = {}
-    love.keyboard.released = {}
+    love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
+    Input = baton.new(controls)
 
     Gamestate.switch(menuState)
 end
 
 function love.update(dt)
     love.window.setTitle(GAME_TITLE.." - "..love.timer.getFPS().." fps")
+    Input:update()
     Gamestate.current():update(dt)
-    love.keyboard.pressed = {}
-    love.keyboard.pressed = {}
-    love.keyboard.released = {}
 end
 
 function love.draw()
@@ -38,20 +37,4 @@ end
 
 function love.resize(w, h)
   push:resize(w, h)
-end
-
-function love.keypressed(key)
-    love.keyboard.pressed[key] = true
-end
-
-function love.keyreleased(key)
-    love.keyboard.released[key] = true
-end
-
-function love.keyboard.isPressed(key)
-    return love.keyboard.pressed[key]
-end
-
-function love.keyboard.isReleased(key)
-    return love.keyboard.released[key]
 end
