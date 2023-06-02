@@ -336,6 +336,13 @@ function Actor:tryJump()
     -- TODO
 end
 
+function Actor:teleport(tile_x, tile_y)
+    self.tile_x = tile_x
+    self.tile_y = tile_y
+    self.x = tile_x * TILE_W
+    self.y = tile_y * TILE_H - CHARACTER_H + TILE_H
+end
+
 function Actor:tryFaceUp()
     if self.state == "idle" then
         if not self.directionFix then
