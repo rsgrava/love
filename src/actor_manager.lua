@@ -6,6 +6,16 @@ function ActorManager.add(actor)
     table.insert(ActorManager.actors, actor)
 end
 
+function ActorManager.delete(actor)
+    local index = 0
+    for actorId, searchActor in pairs(ActorManager.actors) do
+        if actor == searchActor then
+            index = actorId
+        end
+    end
+    table.remove(ActorManager.actors, index)
+end
+
 function ActorManager.checkCollision(layer, tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.priority == layer and not actor.through and
