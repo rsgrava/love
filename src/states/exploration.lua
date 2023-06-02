@@ -158,5 +158,5 @@ function exploration:centerCamera()
         end
     end
 
-    self.camera:lookAt(cam_x + love.graphics.getWidth() / 2, cam_y + love.graphics.getHeight() / 2)
+    self.camera:lookAt(math.floor(cam_x + love.graphics.getWidth() / 2), math.floor(cam_y + love.graphics.getHeight() / 2))
 end
