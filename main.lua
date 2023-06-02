@@ -6,7 +6,7 @@ Gamestate = require("libs/gamestate")
 local baton = require ("libs/baton")
 require("libs/slam")
 require("src/constants")
-require("src/states/menu")
+require("src/states/main_menu")
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -20,7 +20,7 @@ function love.load()
     love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
     Input = baton.new(controls)
 
-    Gamestate.switch(menuState)
+    Gamestate.switch(mainMenuState)
 end
 
 function love.update(dt)

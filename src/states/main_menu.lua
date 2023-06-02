@@ -1,20 +1,20 @@
 Gamestate = require("libs/gamestate")
-require "src/constants"
-require "src/states/exploration"
-require "src/menu"
+require("src/constants")
+require("src/states/exploration")
+require("src/menu_manager")
 
-menuState = {}
+mainMenuState = {}
 
-function menuState:init()
+function mainMenuState:init()
 end
 
-function menuState:enter()
-    self.menu = Menu:init({
+function mainMenuState:enter()
+    local menu = Menu:init({
             x = 0,
             y = 0,
             rows = 3,
             cols = 1,
-            frame_tex = assets.graphics.menu,
+            window_tex = assets.graphics.menu,
             pointer_tex = assets.graphics.hand_pointer,
             move_sound = assets.audio.move_cursor,
             confirm_sound = assets.audio.confirm,
@@ -37,33 +37,34 @@ function menuState:enter()
                 },
             }
         })
-    self.menu:setPos((GAME_W - self.menu:getWidth()) / 2, (GAME_H - self.menu:getHeight()) / 2)
+    menu:setPos((GAME_W - menu:getWidth()) / 2, (GAME_H - menu:getHeight()) / 2)
+    MenuManager.push(menu)
 end
 
-function menuState:leave()
+function mainMenuState:leave()
 end
 
-function menuState:resume()
+function mainMenuState:resume()
 end
 
-function menuState:update(dt)
+function mainMenuState:update(dt)
     if Input:pressed("confirm") then
-        self.menu:onConfirm()
+        MenuManager.confirm()
     elseif Input:pressed("cancel") then
-        self.menu:onCancel()
+        MenuManager.cancel()
     elseif Input:pressed("up") then
-        self.menu:onUp()
+        MenuManager.up()
     elseif Input:pressed("down") then
-        self.menu:onDown()
+        MenuManager.down()
     elseif Input:pressed("left") then
-        self.menu:onLeft()
+        MenuManager.left()
     elseif Input:pressed("right") then
-        self.menu:onRight()
+        MenuManager.onRight()
     end
 end
 
-function menuState:draw()
-    self.menu:draw()
+function mainMenuState:draw()
+    MenuManager.draw()
     local font = love.graphics.getFont()
     love.graphics.print(GAME_TITLE, (GAME_W - font:getWidth(GAME_TITLE)) / 2, TILE_H * 3 - font:getHeight(GAME_TITLE) / 2)
 end
