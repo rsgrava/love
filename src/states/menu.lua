@@ -47,17 +47,17 @@ function menuState:resume()
 end
 
 function menuState:update(dt)
-    if love.keyboard.isPressed("z") then
+    if Input:pressed("confirm") then
         self.menu:onConfirm()
-    elseif love.keyboard.isPressed("x") then
+    elseif Input:pressed("cancel") then
         self.menu:onCancel()
-    elseif love.keyboard.isPressed("up") then
+    elseif Input:pressed("up") then
         self.menu:onUp()
-    elseif love.keyboard.isPressed("down") then
+    elseif Input:pressed("down") then
         self.menu:onDown()
-    elseif love.keyboard.isPressed("left") then
+    elseif Input:pressed("left") then
         self.menu:onLeft()
-    elseif love.keyboard.isPressed("right") then
+    elseif Input:pressed("right") then
         self.menu:onRight()
     end
 end

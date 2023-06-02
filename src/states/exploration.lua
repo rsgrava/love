@@ -34,7 +34,7 @@ function exploration:update(dt)
         end
     end
 
-    if love.keyboard.isPressed("z") then
+    if Input:pressed("action") then
         if self.player.state == "idle" then
             if self.player.direction == "up" then
                 ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y - 1)
@@ -67,10 +67,10 @@ function exploration:getDirInput()
     local dir_x = "none"
     local dir_y = "none"
 
-    local held_up = love.keyboard.isDown("up")
-    local held_down = love.keyboard.isDown("down")
-    local held_left = love.keyboard.isDown("left")
-    local held_right = love.keyboard.isDown("right")
+    local held_up = Input:down("up")
+    local held_down = Input:down("down")
+    local held_left = Input:down("left")
+    local held_right = Input:down("right")
 
     if held_up and not held_down then
         dir_y = "up"
@@ -114,13 +114,13 @@ function exploration:getDirInput()
         dir = dir_x
     end
 
-    if self.ignoredDir == "up" and love.keyboard.isReleased("up") then
+    if self.ignoredDir == "up" and Input:released("up") then
         self.ignoredDir = "none"
-    elseif self.ignoredDir == "down" and love.keyboard.isReleased("down") then
+    elseif self.ignoredDir == "down" and Input:released("down") then
         self.ignoredDir = "none"
-    elseif self.ignoredDir == "left" and love.keyboard.isReleased("left") then
+    elseif self.ignoredDir == "left" and Input:released("left") then
         self.ignoredDir = "none"
-    elseif self.ignoredDir == "right" and love.keyboard.isReleased("right") then
+    elseif self.ignoredDir == "right" and Input:released("right") then
         self.ignoredDir = "none"
     end
 
