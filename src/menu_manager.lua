@@ -18,30 +18,6 @@ function MenuManager.isEmpty()
     return #MenuManager.menus == 0
 end
 
-function MenuManager.up()
-    MenuManager.menus[#MenuManager.menus]:onUp()
-end
-
-function MenuManager.down()
-    MenuManager.menus[#MenuManager.menus]:onDown()
-end
-
-function MenuManager.left()
-    MenuManager.menus[#MenuManager.menus]:onLeft()
-end
-
-function MenuManager.right()
-    MenuManager.menus[#MenuManager.menus]:onRight()
-end
-
-function MenuManager.confirm()
-    MenuManager.menus[#MenuManager.menus]:onConfirm()
-end
-
-function MenuManager.cancel()
-    MenuManager.menus[#MenuManager.menus]:onCancel()
-end
-
 function MenuManager.update(dt)
     if Input:pressed("confirm") then
         MenuManager.menus[#MenuManager.menus]:onConfirm()
