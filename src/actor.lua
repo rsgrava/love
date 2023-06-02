@@ -46,7 +46,7 @@ function Actor:init(actor, props, tile_x, tile_y)
     self.routeFinished = false
     self.speed = actor.speed or 1
     self.freq = actor.freq or 1
-    self.timer = 0
+    self.moveTimer = 0
     
     -- Positioning
     self.tile_x = tile_x
@@ -61,6 +61,23 @@ function Actor:checkCondition()
     else
         return self.condition()
     end
+end
+
+function Actor:collides(target_x, target_y)
+    if target_x < 0 or target_y < 0 or
+       target_x > Map.width - 1 or target_y > Map.height
+       or Map:collides(target_x, target_y) then
+       return true
+    end
+
+    if self.through then
+        return false
+    end
+    return ActorManager.checkCollision(self.priority, target_x, target_y)
+end
+
+function Actor:delete()
+    ActorManager.delete(self)
 end
 
 function Actor:tryActivate()
@@ -503,19 +520,6 @@ function Actor:moveCustom()
     return moved
 end
 
-function Actor:collides(target_x, target_y)
-    if target_x < 0 or target_y < 0 or
-       target_x > Map.width - 1 or target_y > Map.height
-       or Map:collides(target_x, target_y) then
-       return true
-    end
-
-    if self.through then
-        return false
-    end
-    return ActorManager.checkCollision(self.priority, target_x, target_y)
-end
-
 function Actor:update(dt)
     self.sprite:setAnimation(self.direction)
     if self.animated ~= "always" and self.state == "idle" then
@@ -534,8 +538,8 @@ function Actor:update(dt)
         end
     end
 
-    self.timer = self.timer + self.freq * dt
-    if self.timer > ACTOR_MOVE_DELAY then
+    self.moveTimer = self.moveTimer + self.freq * dt
+    if self.moveTimer > ACTOR_MOVE_DELAY then
         local moved = false
         if self.moveType == "random" then
             moved = self:tryMoveRandom()
@@ -545,7 +549,7 @@ function Actor:update(dt)
             moved = self:moveCustom()
         end
         if moved ~= "busy" then
-            self.timer = 0
+            self.moveTimer = 0
         end
         if moved == "collides" and self.trigger == "event_touch" then
             if self.direction == "up" then
@@ -558,6 +562,14 @@ function Actor:update(dt)
                 ActorManager.tryEventTouch(self, self.tile_x + 1, self.tile_y)
             end
         end
+    end
+
+    if self.trigger == "autorun" then
+        self:tryActivate()
+    end
+
+    if self.trigger == "parallel" then
+        self:tryActivate()
     end
 
     if self.active then
