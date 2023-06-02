@@ -17,6 +17,11 @@ function ActorManager.delete(actor)
     table.remove(ActorManager.actors, index)
 end
 
+function ActorManager.clear()
+    ActorManager.actors = {}
+    ActorManager.autorun = false
+end
+
 function ActorManager.checkCollision(layer, tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.priority == layer and not actor.through and

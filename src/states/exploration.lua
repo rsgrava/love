@@ -14,6 +14,10 @@ function exploration:enter()
     self.ignoredDir = "none"
 end
 
+function exploration:leave()
+    ActorManager.clear()
+end
+
 function exploration:update(dt)
     if not ActorManager.hasAutorun() then
         if MenuManager.isEmpty() then
