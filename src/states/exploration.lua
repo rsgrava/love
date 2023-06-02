@@ -16,6 +16,12 @@ end
 
 function exploration:update(dt)
     if not ActorManager.hasAutorun() then
+        if Input:down("run") then
+            self.player.speed = 2
+        else
+            self.player.speed = 1
+        end
+
         local direction = self:getDirInput()
         if direction == "up" then
             if self.player:tryMoveUp() == "collides" then
