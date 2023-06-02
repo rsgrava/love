@@ -29,7 +29,7 @@ end
 
 function ActorManager.getPlayer()
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.trigger == "player" then
+        if actor.class == "player" then
             return actor
         end
     end
@@ -45,7 +45,7 @@ end
 
 function ActorManager.tryAction(playerDirection, tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.trigger == "action" and actor.tile_x == tile_x and actor.tile_y == tile_y then
+        if actor.class == "action" and actor.tile_x == tile_x and actor.tile_y == tile_y then
             if not actor.directionFix then
                 if playerDirection == "up" then
                     actor.direction = "down"
@@ -65,7 +65,7 @@ end
 
 function ActorManager.tryTouchMid(tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.trigger == "player_touch" and actor.priority == "mid" and
+        if actor.class == "player_touch" and actor.priority == "mid" and
            actor.tile_x == tile_x and actor.tile_y == tile_y then
             actor:tryActivate()
             break
@@ -75,7 +75,7 @@ end
 
 function ActorManager.tryTouchLowHigh(tile_x, tile_y)
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.trigger == "player_touch" and 
+        if actor.class == "player_touch" and 
            (actor.priority == "low" or actor.priority == "high") and
            actor.tile_x == tile_x and actor.tile_y == tile_y then
             actor:tryActivate()

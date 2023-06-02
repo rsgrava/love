@@ -8,7 +8,7 @@ Actor = Class{}
 function Actor:init(actor, props, tile_x, tile_y)
     -- General definitions
     self.name = actor.name
-    self.trigger = actor.trigger or nil
+    self.class = actor.class or nil
     self.script = actor.script or nil
     self.condition = actor.condition or nil
     self.props = props
@@ -87,7 +87,7 @@ end
 function Actor:tryActivate()
     if not ActorManager.hasAutorun() and self.script ~= nil then
         self.active = self:checkCondition()
-        if self.active and self.trigger == "autorun" then
+        if self.active and self.class == "autorun" then
             ActorManager.setAutorun(true)
         end
     end
@@ -539,9 +539,9 @@ function Actor:update(dt)
     if self.state ~= "idle" and self.tile_x * TILE_W == self.x
        and self.tile_y * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
-        if self.trigger == "player" then
+        if self.class == "player" then
             ActorManager.tryTouchLowHigh(self.tile_x, self.tile_y)
-        elseif self.trigger == "event_touch" and 
+        elseif self.class == "event_touch" and 
                (self.priority == "low" or self.priority == "high") then
             ActorManager.tryEventTouch(self, self.tile_x, self.tile_y)
         end
@@ -561,7 +561,7 @@ function Actor:update(dt)
             if moved ~= "busy" then
                 self.moveTimer = 0
             end
-            if moved == "collides" and self.trigger == "event_touch" then
+            if moved == "collides" and self.class == "event_touch" then
                 if self.direction == "up" then
                     ActorManager.tryEventTouch(self, self.tile_x, self.tile_y - 1)
                 elseif self.direction == "down" then
@@ -574,11 +574,11 @@ function Actor:update(dt)
             end
         end
 
-        if self.trigger == "autorun" then
+        if self.class == "autorun" then
             self:tryActivate()
         end
 
-        if self.trigger == "parallel" then
+        if self.class == "parallel" then
             self:tryActivate()
         end
     end
@@ -591,7 +591,7 @@ function Actor:update(dt)
         if coroutine.status(self.routine) == "dead" then
             self.active = false
             self.routine = nil
-            if self.trigger == "autorun" then
+            if self.class == "autorun" then
                 ActorManager.setAutorun(false)
             end
         end
