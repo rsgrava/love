@@ -76,12 +76,21 @@ function Actor:collides(target_x, target_y)
     return ActorManager.checkCollision(self.priority, target_x, target_y)
 end
 
+function Actor:isMoving()
+    return self.state == "move"
+end
+
 function Actor:delete()
     ActorManager.delete(self)
 end
 
 function Actor:tryActivate()
-    self.active = self:checkCondition()
+    if not ActorManager.hasAutorun() and self.script ~= nil then
+        self.active = self:checkCondition()
+        if self.active and self.trigger == "autorun" then
+            ActorManager.setAutorun(true)
+        end
+    end
 end
 
 function Actor:tryMoveUp()
@@ -538,49 +547,52 @@ function Actor:update(dt)
         end
     end
 
-    self.moveTimer = self.moveTimer + self.freq * dt
-    if self.moveTimer > ACTOR_MOVE_DELAY then
-        local moved = false
-        if self.moveType == "random" then
-            moved = self:tryMoveRandom()
-        elseif self.moveType == "approach" then
-            moved = self:tryMoveToPlayer()
-        elseif self.moveType == "custom" then
-            moved = self:moveCustom()
-        end
-        if moved ~= "busy" then
-            self.moveTimer = 0
-        end
-        if moved == "collides" and self.trigger == "event_touch" then
-            if self.direction == "up" then
-                ActorManager.tryEventTouch(self, self.tile_x, self.tile_y - 1)
-            elseif self.direction == "down" then
-                ActorManager.tryEventTouch(self, self.tile_x, self.tile_y + 1)
-            elseif self.direction == "left" then
-                ActorManager.tryEventTouch(self, self.tile_x - 1, self.tile_y)
-            elseif self.direction == "right" then
-                ActorManager.tryEventTouch(self, self.tile_x + 1, self.tile_y)
+    if not self.active then
+        self.moveTimer = self.moveTimer + self.freq * dt
+        if self.moveTimer > ACTOR_MOVE_DELAY then
+            local moved = false
+            if self.moveType == "random" then
+                moved = self:tryMoveRandom()
+            elseif self.moveType == "approach" then
+                moved = self:tryMoveToPlayer()
+            elseif self.moveType == "custom" then
+                moved = self:moveCustom()
+            end
+            if moved ~= "busy" then
+                self.moveTimer = 0
+            end
+            if moved == "collides" and self.trigger == "event_touch" then
+                if self.direction == "up" then
+                    ActorManager.tryEventTouch(self, self.tile_x, self.tile_y - 1)
+                elseif self.direction == "down" then
+                    ActorManager.tryEventTouch(self, self.tile_x, self.tile_y + 1)
+                elseif self.direction == "left" then
+                    ActorManager.tryEventTouch(self, self.tile_x - 1, self.tile_y)
+                elseif self.direction == "right" then
+                    ActorManager.tryEventTouch(self, self.tile_x + 1, self.tile_y)
+                end
             end
         end
-    end
 
-    if self.trigger == "autorun" then
-        self:tryActivate()
-    end
+        if self.trigger == "autorun" then
+            self:tryActivate()
+        end
 
-    if self.trigger == "parallel" then
-        self:tryActivate()
+        if self.trigger == "parallel" then
+            self:tryActivate()
+        end
     end
 
     if self.active then
-        if self.script ~= nil then
-            if self.routine == nil then
-                self.routine = coroutine.create(self.script)
-            end
-            coroutine.resume(self.routine, self)
-            if coroutine.status(self.routine) == "dead" then
-                self.active = false
-                self.routine = nil
+        if self.routine == nil then
+            self.routine = coroutine.create(self.script)
+        end
+        coroutine.resume(self.routine, self, dt)
+        if coroutine.status(self.routine) == "dead" then
+            self.active = false
+            self.routine = nil
+            if self.trigger == "autorun" then
+                ActorManager.setAutorun(false)
             end
         end
     end

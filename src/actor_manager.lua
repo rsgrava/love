@@ -1,5 +1,6 @@
 ActorManager = {
-    actors = {}
+    actors = {},
+    autorun = false,
 }
 
 function ActorManager.add(actor)
@@ -32,6 +33,14 @@ function ActorManager.getPlayer()
             return actor
         end
     end
+end
+
+function ActorManager.hasAutorun()
+    return ActorManager.autorun
+end
+
+function ActorManager.setAutorun(state)
+    ActorManager.autorun = state
 end
 
 function ActorManager.tryAction(playerDirection, tile_x, tile_y)

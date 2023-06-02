@@ -15,35 +15,37 @@ function exploration:enter()
 end
 
 function exploration:update(dt)
-    local direction = self:getDirInput()
-    if direction == "up" then
-        if self.player:tryMoveUp() == "collides" then
-            ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y - 1)
+    if not ActorManager.hasAutorun() then
+        local direction = self:getDirInput()
+        if direction == "up" then
+            if self.player:tryMoveUp() == "collides" then
+                ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y - 1)
+            end
+        elseif direction == "down" then
+            if self.player:tryMoveDown() == "collides" then
+                ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y + 1)
+            end
+        elseif direction == "left" then
+            if self.player:tryMoveLeft() == "collides" then
+                ActorManager.tryTouchMid(self.player.tile_x - 1, self.player.tile_y)
+            end
+        elseif direction == "right" then
+            if self.player:tryMoveRight() == "collides" then
+                ActorManager.tryTouchMid(self.player.tile_x + 1, self.player.tile_y)
+            end
         end
-    elseif direction == "down" then
-        if self.player:tryMoveDown() == "collides" then
-            ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y + 1)
-        end
-    elseif direction == "left" then
-        if self.player:tryMoveLeft() == "collides" then
-            ActorManager.tryTouchMid(self.player.tile_x - 1, self.player.tile_y)
-        end
-    elseif direction == "right" then
-        if self.player:tryMoveRight() == "collides" then
-            ActorManager.tryTouchMid(self.player.tile_x + 1, self.player.tile_y)
-        end
-    end
 
-    if Input:pressed("action") then
-        if self.player.state == "idle" then
-            if self.player.direction == "up" then
-                ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y - 1)
-            elseif self.player.direction == "down" then
-                ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y + 1)
-            elseif self.player.direction == "left" then
-                ActorManager.tryAction(self.player.direction, self.player.tile_x - 1, self.player.tile_y)
-            elseif self.player.direction == "right" then
-                ActorManager.tryAction(self.player.direction, self.player.tile_x + 1, self.player.tile_y)
+        if Input:pressed("action") then
+            if self.player.state == "idle" then
+                if self.player.direction == "up" then
+                    ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y - 1)
+                elseif self.player.direction == "down" then
+                    ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y + 1)
+                elseif self.player.direction == "left" then
+                    ActorManager.tryAction(self.player.direction, self.player.tile_x - 1, self.player.tile_y)
+                elseif self.player.direction == "right" then
+                    ActorManager.tryAction(self.player.direction, self.player.tile_x + 1, self.player.tile_y)
+                end
             end
         end
     end
