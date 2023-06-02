@@ -16,43 +16,74 @@ end
 
 function exploration:update(dt)
     if not ActorManager.hasAutorun() then
-        if Input:down("run") then
-            self.player.speed = 2
-        else
-            self.player.speed = 1
-        end
+        if MenuManager.isEmpty() then
+            if Input:down("run") then
+                self.player.speed = 2
+            else
+                self.player.speed = 1
+            end
 
-        local direction = self:getDirInput()
-        if direction == "up" then
-            if self.player:tryMoveUp() == "collides" then
-                ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y - 1)
-            end
-        elseif direction == "down" then
-            if self.player:tryMoveDown() == "collides" then
-                ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y + 1)
-            end
-        elseif direction == "left" then
-            if self.player:tryMoveLeft() == "collides" then
-                ActorManager.tryTouchMid(self.player.tile_x - 1, self.player.tile_y)
-            end
-        elseif direction == "right" then
-            if self.player:tryMoveRight() == "collides" then
-                ActorManager.tryTouchMid(self.player.tile_x + 1, self.player.tile_y)
-            end
-        end
-
-        if Input:pressed("action") then
-            if self.player.state == "idle" then
-                if self.player.direction == "up" then
-                    ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y - 1)
-                elseif self.player.direction == "down" then
-                    ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y + 1)
-                elseif self.player.direction == "left" then
-                    ActorManager.tryAction(self.player.direction, self.player.tile_x - 1, self.player.tile_y)
-                elseif self.player.direction == "right" then
-                    ActorManager.tryAction(self.player.direction, self.player.tile_x + 1, self.player.tile_y)
+            local direction = self:getDirInput()
+            if direction == "up" then
+                if self.player:tryMoveUp() == "collides" then
+                    ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y - 1)
                 end
+            elseif direction == "down" then
+                if self.player:tryMoveDown() == "collides" then
+                    ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y + 1)
+                end
+            elseif direction == "left" then
+                if self.player:tryMoveLeft() == "collides" then
+                    ActorManager.tryTouchMid(self.player.tile_x - 1, self.player.tile_y)
+                end
+            elseif direction == "right" then
+                if self.player:tryMoveRight() == "collides" then
+                    ActorManager.tryTouchMid(self.player.tile_x + 1, self.player.tile_y)
+                end
+            elseif Input:pressed("action") then
+                if self.player.state == "idle" then
+                    if self.player.direction == "up" then
+                        ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y - 1)
+                    elseif self.player.direction == "down" then
+                        ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y + 1)
+                    elseif self.player.direction == "left" then
+                        ActorManager.tryAction(self.player.direction, self.player.tile_x - 1, self.player.tile_y)
+                    elseif self.player.direction == "right" then
+                        ActorManager.tryAction(self.player.direction, self.player.tile_x + 1, self.player.tile_y)
+                    end
+                end
+            elseif Input:pressed("menu") then
+                MenuManager.push(SelectionBox:init({
+                    x = 0,
+                    y = 0,
+                    rows = 3,
+                    cols = 1,
+                    window_tex = assets.graphics.menu,
+                    pointer_tex = assets.graphics.hand_pointer,
+                    move_sound = assets.audio.move_cursor,
+                    confirm_sound = assets.audio.confirm,
+                    cancel_sound = assets.audio.cancel,
+                    disabled_sound = assets.audio.disabled,
+                    items = {
+                        {
+                            name = "Start Game",
+                            onConfirm = function() Gamestate.switch(exploration) end,
+                            enabled = true
+                        },
+                        {
+                            name = "Options",
+                            enabled = false
+                        },
+                        {
+                            name = "Quit",
+                            onConfirm = function() love.event.quit() end,
+                            enabled = true
+                        },
+                    }
+                }))
             end
+        else
+            MenuManager.update(dt)
         end
     end
 
@@ -68,6 +99,7 @@ function exploration:draw()
         ActorManager.draw()
         Map:drawUpper()
     self.camera:detach()
+    MenuManager.draw()
 end
 
 function exploration:getDirInput()

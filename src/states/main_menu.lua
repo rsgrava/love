@@ -10,7 +10,7 @@ function mainMenuState:init()
 end
 
 function mainMenuState:enter()
-    local menu = selectionBox:init({
+    local menu = SelectionBox:init({
             x = 0,
             y = 0,
             rows = 3,
@@ -52,19 +52,7 @@ function mainMenuState:resume()
 end
 
 function mainMenuState:update(dt)
-    if Input:pressed("confirm") then
-        MenuManager.confirm()
-    elseif Input:pressed("cancel") then
-        MenuManager.cancel()
-    elseif Input:pressed("up") then
-        MenuManager.up()
-    elseif Input:pressed("down") then
-        MenuManager.down()
-    elseif Input:pressed("left") then
-        MenuManager.left()
-    elseif Input:pressed("right") then
-        MenuManager.onRight()
-    end
+    MenuManager.update(dt)
 end
 
 function mainMenuState:draw()
