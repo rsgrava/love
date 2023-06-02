@@ -1,6 +1,7 @@
 Class = require("libs/class")
-require "src/constants"
-require "src/utils"
+require("src/constants")
+require("src/window")
+require("src/utils")
 
 Menu = Class{}
 
@@ -9,8 +10,6 @@ function Menu:init(defs)
     self.y = defs.y
     self.cols = math.min(defs.cols, #defs.items)
     self.rows = defs.rows
-    self.frame_tex = defs.frame_tex
-    self.quads = generateQuads(defs.frame_tex, TILE_W, TILE_H)
     self.pointer_tex = defs.pointer_tex
     self.selection_x = defs.selection_x or 0
     self.selection_y = defs.selection_y or 0
@@ -36,6 +35,13 @@ function Menu:init(defs)
         self.total_rows = self.total_rows + 1
     end
     self.top_row = 0
+    self.window = Window({
+        x = defs.x,
+        y = defs.y,
+        width = self.width,
+        height = self.height,
+        tex = defs.window_tex,
+    })
 
     return self
 end
@@ -51,6 +57,7 @@ end
 function Menu:setPos(x, y)
     self.x = x
     self.y = y
+    self.window:setPos(x, y)
 end
 
 function Menu:getCurrentItem()
@@ -137,30 +144,7 @@ function Menu:onRight()
 end
 
 function Menu:draw()
-    -- draw menu frame
-    for y = 0, self.height - 1 do
-        for x = 0, self.width - 1 do
-            local quad = 4
-            if x == 0 and y == 0 then
-                quad = 0
-            elseif x == self.width - 1 and y == 0 then
-                quad = 2
-            elseif y == 0 then
-                quad = 1
-            elseif y == self.height - 1 and x == 0 then
-                quad = 6
-            elseif y == self.height - 1 and x == self.width - 1 then
-                quad = 8
-            elseif x == 0 then
-                quad = 3
-            elseif x == self.width - 1 then
-                quad = 5
-            elseif y == self.height - 1 then
-                quad = 7
-            end
-            love.graphics.draw(self.frame_tex, self.quads[quad], self.x + x * TILE_W, self.y + y * TILE_H)
-        end
-    end
+    self.window:draw()
 
     -- draw menu items
     local top_left_item = self.top_row * self.cols
