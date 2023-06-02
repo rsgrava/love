@@ -13,7 +13,7 @@ function mainMenuState:enter()
     local menu = SelectionBox:init({
             x = 0,
             y = 0,
-            rows = 3,
+            rows = 4,
             cols = 1,
             window_tex = assets.graphics.menu,
             pointer_tex = assets.graphics.hand_pointer,
@@ -23,9 +23,13 @@ function mainMenuState:enter()
             disabled_sound = assets.audio.disabled,
             items = {
                 {
-                    name = "Start Game",
+                    name = "New Game",
                     onConfirm = function() Gamestate.switch(exploration) end,
                     enabled = true
+                },
+                {
+                    name = "Load Game",
+                    enabled = false
                 },
                 {
                     name = "Options",
