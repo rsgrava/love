@@ -38,8 +38,10 @@ function mainMenuState:enter()
                 },
             }
         })
-    menu:setPos((GAME_W - menu:getWidth()) / 2, (GAME_H - menu:getHeight()) / 2)
+    menu:setPos((GAME_W - menu:getWidth()) / 8, (GAME_H - menu:getHeight()) / 2)
     MenuManager.push(menu)
+
+    self.bg = assets.graphics.castle
 end
 
 function mainMenuState:leave()
@@ -65,7 +67,7 @@ function mainMenuState:update(dt)
 end
 
 function mainMenuState:draw()
+    love.graphics.draw(self.bg, 0, 0, 0, TILE_SCALE_X, TILE_SCALE_Y)
     MenuManager.draw()
     local font = love.graphics.getFont()
-    love.graphics.print(GAME_TITLE, (GAME_W - font:getWidth(GAME_TITLE)) / 2, TILE_H * 3 - font:getHeight(GAME_TITLE) / 2)
 end
