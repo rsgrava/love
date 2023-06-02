@@ -10,6 +10,10 @@ function MenuManager.pop()
     MenuManager.menus[#MenuManager.menus] = nil
 end
 
+function MenuManager.clear()
+    MenuManager.menus = {}
+end
+
 function MenuManager.up()
     MenuManager.menus[#MenuManager.menus]:onUp()
 end

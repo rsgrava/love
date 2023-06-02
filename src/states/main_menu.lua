@@ -45,6 +45,7 @@ function mainMenuState:enter()
 end
 
 function mainMenuState:leave()
+    MenuManager.clear()
 end
 
 function mainMenuState:resume()
