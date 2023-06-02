@@ -3,9 +3,9 @@ require("src/constants")
 require("src/window")
 require("src/utils")
 
-Menu = Class{}
+selectionBox = Class{}
 
-function Menu:init(defs)
+function selectionBox:init(defs)
     self.x = defs.x
     self.y = defs.y
     self.cols = math.min(defs.cols, #defs.items)
@@ -46,32 +46,32 @@ function Menu:init(defs)
     return self
 end
 
-function Menu:getWidth()
+function selectionBox:getWidth()
     return self.width * TILE_W
 end
 
-function Menu:getHeight()
+function selectionBox:getHeight()
     return self.height * TILE_H
 end
 
-function Menu:setPos(x, y)
+function selectionBox:setPos(x, y)
     self.x = x
     self.y = y
     self.window:setPos(x, y)
 end
 
-function Menu:getCurrentItem()
+function selectionBox:getCurrentItem()
     return self.top_row * self.cols + self.selection_y * self.cols + self.selection_x
 end
 
-function Menu:clampSelection()
+function selectionBox:clampSelection()
     if self:getCurrentItem() >= #self.items then
         self.selection_y = math.floor(#self.items / self.cols) - self.top_row
         self.selection_x = #self.items % self.cols - 1
     end
 end
 
-function Menu:onConfirm()
+function selectionBox:onConfirm()
     local item = self.items[self:getCurrentItem() + 1]
     if item.enabled then
         local func = self.items[self:getCurrentItem() + 1].onConfirm
@@ -88,7 +88,7 @@ function Menu:onConfirm()
     end
 end
 
-function Menu:onCancel()
+function selectionBox:onCancel()
     local func = self.items[self:getCurrentItem() + 1].onCancel
     if func ~= nil then
         func()
@@ -98,7 +98,7 @@ function Menu:onCancel()
     end
 end
 
-function Menu:onUp()
+function selectionBox:onUp()
     self.selection_y = self.selection_y - 1
     if self.selection_y < 0 then
         self.selection_y = 0
@@ -109,7 +109,7 @@ function Menu:onUp()
     self:clampSelection()
 end
 
-function Menu:onDown()
+function selectionBox:onDown()
     self.selection_y = self.selection_y + 1
     if self.selection_y > self.rows - 1 then
         self.selection_y = self.rows - 1
@@ -123,7 +123,7 @@ function Menu:onDown()
     self:clampSelection()
 end
 
-function Menu:onLeft()
+function selectionBox:onLeft()
     self.selection_x = self.selection_x - 1
     if self.selection_x < 0 then
         self.selection_x = 0
@@ -133,7 +133,7 @@ function Menu:onLeft()
     self:clampSelection()
 end
 
-function Menu:onRight()
+function selectionBox:onRight()
     self.selection_x = self.selection_x + 1
     if self.selection_x > self.cols - 1 then
         self.selection_x = self.cols - 1
@@ -143,7 +143,7 @@ function Menu:onRight()
     self:clampSelection()
 end
 
-function Menu:draw()
+function selectionBox:draw()
     self.window:draw()
 
     -- draw menu items

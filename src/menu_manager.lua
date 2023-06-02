@@ -1,5 +1,3 @@
-require("src/menu")
-
 MenuManager = {
     menus = {}
 }

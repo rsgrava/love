@@ -1,6 +1,7 @@
 Gamestate = require("libs/gamestate")
 require("src/constants")
 require("src/states/exploration")
+require("src/selection_box")
 require("src/menu_manager")
 
 mainMenuState = {}
@@ -9,7 +10,7 @@ function mainMenuState:init()
 end
 
 function mainMenuState:enter()
-    local menu = Menu:init({
+    local menu = selectionBox:init({
             x = 0,
             y = 0,
             rows = 3,
