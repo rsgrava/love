@@ -1,7 +1,6 @@
 Class = require("libs/class")
 require("src/constants")
 require("src/window")
-require("src/utils")
 
 SelectionBox = Class{}
 
@@ -28,7 +27,7 @@ function SelectionBox:init(defs)
             self.itemWidth = len
         end
     end
-    self.width = self.cols * self.itemWidth + 2 + self.cols - 1
+    self.width = self.cols * self.itemWidth + 1 + self.cols
     self.height = self.rows + 2
     self.total_rows = math.floor(#self.items / self.cols)
     if #self.items % self.cols > 0 then
