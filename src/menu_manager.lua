@@ -20,15 +20,25 @@ end
 
 function MenuManager.update(dt)
     if Input:pressed("confirm") then
-        MenuManager.menus[#MenuManager.menus]:onConfirm()
+        if MenuManager.menus[#MenuManager.menus].onConfirm ~= nil then
+            MenuManager.menus[#MenuManager.menus]:onConfirm(dt)
+        end
     elseif Input:pressed("cancel") then
-        MenuManager.menus[#MenuManager.menus]:onCancel()
+        if MenuManager.menus[#MenuManager.menus].onCancel ~= nil then
+            MenuManager.menus[#MenuManager.menus]:onCancel(dt)
+        end
     elseif Input:pressed("up") then
-        MenuManager.menus[#MenuManager.menus]:onUp()
+        if MenuManager.menus[#MenuManager.menus].onUp ~= nil then
+            MenuManager.menus[#MenuManager.menus]:onUp(dt)
+        end
     elseif Input:pressed("down") then
-        MenuManager.menus[#MenuManager.menus]:onDown()
+        if MenuManager.menus[#MenuManager.menus].onDown ~= nil then
+            MenuManager.menus[#MenuManager.menus]:onDown(dt)
+        end
     elseif Input:pressed("left") then
-        MenuManager.menus[#MenuManager.menus]:onLeft()
+        if MenuManager.menus[#MenuManager.menus].onLeft ~= nil then
+            MenuManager.menus[#MenuManager.menus]:onLeft(dt)
+        end
     elseif Input:pressed("right") then
         MenuManager.menus[#MenuManager.menus]:onRight()
     end
