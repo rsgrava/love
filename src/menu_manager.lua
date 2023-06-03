@@ -40,7 +40,13 @@ function MenuManager.update(dt)
             MenuManager.menus[#MenuManager.menus]:onLeft(dt)
         end
     elseif Input:pressed("right") then
-        MenuManager.menus[#MenuManager.menus]:onRight()
+        if MenuManager.menus[#MenuManager.menus].onRight ~= nil then
+            MenuManager.menus[#MenuManager.menus]:onRight(dt)
+        end
+    else
+        if MenuManager.menus[#MenuManager.menus].update ~= nil then
+            MenuManager.menus[#MenuManager.menus]:update(dt)
+        end
     end
 end
 
