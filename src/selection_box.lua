@@ -12,7 +12,6 @@ function SelectionBox:init(defs)
     self.pointer_tex = defs.pointer_tex
     self.selection_x = defs.selection_x or 0
     self.selection_y = defs.selection_y or 0
-    self.padding_y = defs.padding_y or 4
     self.move_sound = defs.move_sound or nil
     self.confirm_sound = defs.confirm_sound or nil
     self.cancel_sound = defs.cancel_sound or nil
@@ -158,10 +157,10 @@ function SelectionBox:draw()
         if not item.enabled then
             love.graphics.setColor(love.math.colorFromBytes(128, 128, 128))
         end
-        love.graphics.print(item.name, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H + self.padding_y)
+        love.graphics.print(item.name, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H)
         love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
     end
 
     -- draw selection pointer
-    love.graphics.draw(self.pointer_tex, self.x + self.selection_x * TILE_W * (self.itemWidth + 1), self.y + self.selection_y * TILE_H + TILE_H + self.padding_y)
+    --love.graphics.draw(self.pointer_tex, self.x + self.selection_x * TILE_W * (self.itemWidth + 1), self.y + self.selection_y * TILE_H + TILE_H + self.padding_y)
 end
