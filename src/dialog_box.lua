@@ -26,15 +26,18 @@ function DialogBox:init(defs)
             tex = assets.graphics.menu,
         })
     end
+    if self.portrait ~= nil then
+        self.quads = generateQuads(self.portrait.image, PORTRAIT_W, PORTRAIT_H)
+    end
     self.mainWindow = Window({
         x = 0,
         y = GAME_H - DIALOG_H * TILE_H,
         width = DIALOG_W,
         height = DIALOG_H,
-        tex = assets.graphics.menu,
+        tex = assets.graphics.system.window.window01,
     })
 
-    local speed = defs.speed or 5
+    local speed = defs.speed or 3
     if speed == 1 then
         self.threshold = 0.04
     elseif speed == 2 then
@@ -90,11 +93,11 @@ function DialogBox:draw()
     self.mainWindow:draw()
     local xPadding = 0
     if self.portrait ~= nil then
-        love.graphics.draw(self.portrait, TILE_W * 0.75, GAME_H - DIALOG_H * TILE_H + TILE_H, 0, TILE_SCALE_X, TILE_SCALE_Y)
+        love.graphics.draw(self.portrait.image, self.quads[self.portrait.quad], TILE_W * 0.75, GAME_H - DIALOG_H * TILE_H + TILE_H, 0, TILE_SCALE_X, TILE_SCALE_Y)
         xPadding = PORTRAIT_W
     end
     local _, wrappedText = love.graphics.getFont():getWrap(self.subString, (self.width - 2) * TILE_W - xPadding)
     for textId, text in ipairs(wrappedText) do
-        love.graphics.print(text, TILE_W + xPadding, GAME_H - DIALOG_H * TILE_H + textId * TILE_H + TILE_H / 4)
+        love.graphics.print(text, TILE_W + xPadding, GAME_H - (DIALOG_H + 0.25) * TILE_H + textId * TILE_H)
     end
 end
