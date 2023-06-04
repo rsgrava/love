@@ -51,8 +51,8 @@ function Actor:init(actor, props, tile_x, tile_y)
     -- Positioning
     self.tile_x = tile_x
     self.tile_y = tile_y
-    self.x = self.tile_x * TILE_W - actor.width + TILE_W
-    self.y = self.tile_y * TILE_H - actor.height + TILE_H
+    self.x = self.tile_x * TILE_W - (actor.width or 0) + TILE_W
+    self.y = self.tile_y * TILE_H - (actor.height or 0) + TILE_H
 end
 
 function Actor:checkCondition()
@@ -103,7 +103,7 @@ function Actor:tryMoveUp()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_y = target_y
@@ -124,7 +124,7 @@ function Actor:tryMoveDown()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_y = target_y
@@ -145,7 +145,7 @@ function Actor:tryMoveLeft()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_x = target_x
@@ -166,7 +166,7 @@ function Actor:tryMoveRight()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_x = target_x
@@ -192,7 +192,7 @@ function Actor:tryMoveUpLeft()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_x = target_x
@@ -219,7 +219,7 @@ function Actor:tryMoveUpRight()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_x = target_x
@@ -246,7 +246,7 @@ function Actor:tryMoveDownLeft()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_x = target_x
@@ -273,7 +273,7 @@ function Actor:tryMoveDownRight()
             return "collides"
         else
             self.state = "move"
-            if self.animated ~= "fixed" then
+            if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
             self.tile_x = target_x
@@ -537,11 +537,13 @@ function Actor:moveCustom()
 end
 
 function Actor:update(dt)
-    self.sprite:setAnimation(self.direction)
-    if self.animated ~= "always" and self.state == "idle" then
-        self.sprite:pause()
+    if self.sprite ~= nil then
+        self.sprite:setAnimation(self.direction)
+        if self.animated ~= "always" and self.state == "idle" then
+            self.sprite:pause()
+        end
+        self.sprite:update(dt)
     end
-    self.sprite:update(dt)
 
     if self.state ~= "idle" and self.tile_x * TILE_W == self.x
        and self.tile_y * TILE_H - self.height + TILE_H == self.y then
