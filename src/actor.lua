@@ -596,7 +596,11 @@ function Actor:update(dt)
         if self.routine == nil then
             self.routine = coroutine.create(self.script)
         end
-        coroutine.resume(self.routine, self, dt)
+        local result, msg = coroutine.resume(self.routine, self, dt)
+        -- debug: remove this later
+        if not result then
+            print(msg)
+        end
         if coroutine.status(self.routine) == "dead" then
             self.active = false
             self.routine = nil
