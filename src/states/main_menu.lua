@@ -15,7 +15,7 @@ function mainMenuState:enter()
             y = 0,
             rows = 4,
             cols = 1,
-            window_tex = assets.graphics.menu,
+            window_tex = assets.graphics.system.window.window01,
             pointer_tex = assets.graphics.hand_pointer,
             move_sound = assets.audio.move_cursor,
             confirm_sound = assets.audio.confirm,
@@ -45,7 +45,7 @@ function mainMenuState:enter()
     menu:setPos((GAME_W - menu:getWidth()) / 8, (GAME_H - menu:getHeight()) / 2)
     MenuManager.push(menu)
 
-    self.bg = assets.graphics.castle
+    self.bg = assets.graphics.titles1.Castle_b2
 end
 
 function mainMenuState:leave()
@@ -60,7 +60,6 @@ function mainMenuState:update(dt)
 end
 
 function mainMenuState:draw()
-    love.graphics.draw(self.bg, 0, 0, 0, TILE_SCALE_X, TILE_SCALE_Y)
+    love.graphics.draw(self.bg, 0, 0, 0)
     MenuManager.draw()
-    local font = love.graphics.getFont()
 end
