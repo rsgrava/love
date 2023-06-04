@@ -9,7 +9,6 @@ function SelectionBox:init(defs)
     self.y = defs.y
     self.cols = math.min(defs.cols, #defs.items)
     self.rows = defs.rows
-    self.pointer_tex = defs.pointer_tex
     self.selection_x = defs.selection_x or 0
     self.selection_y = defs.selection_y or 0
     self.move_sound = defs.move_sound or nil
@@ -33,13 +32,15 @@ function SelectionBox:init(defs)
         self.total_rows = self.total_rows + 1
     end
     self.top_row = 0
+    self.window_tex = defs.window_tex
     self.window = Window({
         x = defs.x,
         y = defs.y,
         width = self.width,
         height = self.height,
-        tex = defs.window_tex,
+        tex = self.window_tex,
     })
+    self.pointerQuad = generateQuads(defs.window_tex, TILE_W / 2, TILE_H / 2, 0, TILE_H / 4)[14]
 
     return self
 end
@@ -162,5 +163,5 @@ function SelectionBox:draw()
     end
 
     -- draw selection pointer
-    --love.graphics.draw(self.pointer_tex, self.x + self.selection_x * TILE_W * (self.itemWidth + 1), self.y + self.selection_y * TILE_H + TILE_H + self.padding_y)
+    love.graphics.draw(self.window_tex, self.pointerQuad, self.x + self.selection_x * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selection_y * TILE_H + TILE_H * 1.5)
 end
