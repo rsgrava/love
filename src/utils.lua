@@ -12,16 +12,18 @@ function deepCopy(table)
     return newTable
 end
 
-function generateQuads(tex, quadWidth, quadHeight)
-    local width = tex:getWidth() / quadWidth
-    local height = tex:getHeight() / quadHeight
+function generateQuads(tex, quadWidth, quadHeight, ox, oy)
+    local ox = ox or 0
+    local oy = oy or 0
+    local width = (tex:getWidth() - ox) / quadWidth
+    local height = (tex:getHeight() - oy) / quadHeight
     local counter = 0
     local quads = {}
 
     for y = 0, height - 1 do
         for x = 0, width - 1 do
             quads[counter] = love.graphics.newQuad(
-                x * quadWidth, y * quadHeight, quadWidth, quadHeight, tex:getDimensions()
+                x * quadWidth + ox, y * quadHeight + oy, quadWidth, quadHeight, tex:getDimensions()
             )
             counter = counter + 1
         end
