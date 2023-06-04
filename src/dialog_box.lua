@@ -5,12 +5,13 @@ DialogBox = Class{}
 
 function DialogBox:init(defs)
     self.text = defs.text
-    self.title = defs.title
-    self.portrait = defs.portrait or nil
-    if defs.skippable == nil then
+    local config = defs.config or {}
+    self.title = config.title or nil
+    self.portrait = config.portrait or nil
+    if config.skippable == nil then
         self.skippable = true
     else
-        self.skippable = defs.skippable
+        self.skippable = config.skippable
     end
 
     self.width = DIALOG_W
@@ -36,8 +37,15 @@ function DialogBox:init(defs)
         height = DIALOG_H,
         tex = assets.graphics.system.window.window01,
     })
+    self.pointer = Sprite({
+        texture = assets.graphics.system.window.window01,
+        animation = assets.animations.blinking_pointer,
+        firstAnim = "pointer",
+        width = TILE_W / 2,
+        height = TILE_H / 2,
+    })
 
-    local speed = defs.speed or 3
+    local speed = config.speed or 3
     if speed == 1 then
         self.threshold = 0.04
     elseif speed == 2 then
@@ -72,7 +80,9 @@ function DialogBox:onConfirm(dt)
 end
 
 function DialogBox:update(dt)
-    if not self.finished then
+    if self.finished then
+        self.pointer:update(dt)
+    else
         self.timer = self.timer + dt
         if self.timer > self.threshold then
             self.subString = string.sub(self.text[self.currentText], 1, self.subStringIdx)
@@ -99,5 +109,8 @@ function DialogBox:draw()
     local _, wrappedText = love.graphics.getFont():getWrap(self.subString, (self.width - 2) * TILE_W - xPadding)
     for textId, text in ipairs(wrappedText) do
         love.graphics.print(text, TILE_W + xPadding, GAME_H - (DIALOG_H + 0.25) * TILE_H + textId * TILE_H)
+    end
+    if self.finished then
+        self.pointer:draw(GAME_W - TILE_W * 2, GAME_H - TILE_H)
     end
 end
