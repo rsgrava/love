@@ -8,7 +8,7 @@ function Window:init(defs)
     self.width = defs.width
     self.height = defs.height
     self.tex = defs.tex
-    self.quads = generateQuads(self.tex, TILE_W, TILE_H)
+    self.quads = generateQuads(self.tex, TILE_W / 2, TILE_H / 2)
 end
 
 function Window:setPos(x, y)
@@ -19,25 +19,38 @@ end
 function Window:draw()
     for y = 0, self.height - 1 do
         for x = 0, self.width - 1 do
-            local quad = 4
+            -- middle
+            local corner_quad = nil
             if x == 0 and y == 0 then
-                quad = 0
+                -- top left
+                corner_quad = 4
             elseif x == self.width - 1 and y == 0 then
-                quad = 2
+                -- top right
+                corner_quad = 7
             elseif y == 0 then
-                quad = 1
+                -- top middle
+                corner_quad = 5
             elseif y == self.height - 1 and x == 0 then
-                quad = 6
+                -- bottom left
+                corner_quad = 28
             elseif y == self.height - 1 and x == self.width - 1 then
-                quad = 8
+                -- bottom right
+                corner_quad = 31
             elseif x == 0 then
-                quad = 3
+                -- left middle
+                corner_quad = 12
             elseif x == self.width - 1 then
-                quad = 5
+                -- right middle
+                corner_quad = 15
             elseif y == self.height - 1 then
-                quad = 7
+                -- bottom middle
+                corner_quad = 29
             end
-            love.graphics.draw(self.tex, self.quads[quad], self.x + x * TILE_W, self.y + y * TILE_H)
+            
+            love.graphics.draw(self.tex, self.quads[0], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
+            if corner_quad ~= nil then
+                love.graphics.draw(self.tex, self.quads[corner_quad], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
+            end
         end
     end
 end
