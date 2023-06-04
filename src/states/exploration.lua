@@ -62,7 +62,7 @@ function exploration:update(dt)
                     y = 0,
                     rows = 3,
                     cols = 1,
-                    window_tex = assets.graphics.menu,
+                    window_tex = assets.graphics.system.window.window01,
                     pointer_tex = assets.graphics.hand_pointer,
                     move_sound = assets.audio.move_cursor,
                     confirm_sound = assets.audio.confirm,
@@ -86,6 +86,7 @@ function exploration:update(dt)
                     }
                 }))
             end
+            ActorManager.update(dt)
         else
             MenuManager.update(dt)
         end
@@ -93,7 +94,6 @@ function exploration:update(dt)
 
     Timer.update(dt)
     Map:update(dt)
-    ActorManager.update(dt)
     self:centerCamera()
 end
 
@@ -173,8 +173,8 @@ function exploration:getDirInput()
 end
 
 function exploration:centerCamera()
-    local cam_x = self.player.x + (CHARACTER_W - GAME_W) / 2
-    local cam_y = self.player.y + (CHARACTER_H - GAME_H) / 2
+    local cam_x = self.player.x + (TILE_W - GAME_W) / 2
+    local cam_y = self.player.y + (TILE_H - GAME_H) / 2
     local map_width = Map.width * TILE_W
     local map_height = Map.height * TILE_W
 
