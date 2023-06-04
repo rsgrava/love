@@ -1,25 +1,50 @@
-
+require("src/menu_manager")
 require("src/window")
 
-DialogBox = Class{}
+DialogBox = {
+    messages = {},
 
-function DialogBox:init(defs)
-    self.text = defs.text
-    local config = defs.config or {}
-    self.title = config.title or nil
-    self.portrait = config.portrait or nil
+    finished = false,
+    timer = 0,
+    subString = "",
+    subStringIdx = 1,
+
+    first = 0,
+    last = -1,
+
+    mainWindow = Window({
+        x = 0,
+        y = GAME_H - DIALOG_H * TILE_H,
+        width = DIALOG_W,
+        height = DIALOG_H,
+        tex = assets.graphics.system.window.window01,
+    }),
+    pointer = Sprite({
+        texture = assets.graphics.system.window.window01,
+        animation = assets.animations.blinking_pointer,
+        firstAnim = "pointer",
+        width = TILE_W / 2,
+        height = TILE_H / 2,
+    })
+}
+
+function DialogBox.say(text, config)
+    local message = {}
+    message.text = text
+    local config = config or {}
+    message.title = config.title or nil
+    message.portrait = config.portrait or nil
     if config.skippable == nil then
-        self.skippable = true
+        message.skippable = true
     else
-        self.skippable = config.skippable
+        message.skippable = config.skippable
     end
 
-    self.width = DIALOG_W
-    self.height = DIALOG_H
-
-    if self.title ~= nil then
-        local len = math.ceil(love.graphics.getFont():getWidth(self.title) / TILE_W)
-        self.titleWindow = Window({
+    message.width = DIALOG_W
+    message.height = DIALOG_H
+    if message.title ~= nil then
+        local len = math.ceil(love.graphics.getFont():getWidth(message.title) / TILE_W)
+        message.titleWindow = Window({
             x = 0,
             y = GAME_H - DIALOG_H * TILE_H - 2 * TILE_H,
             width = len + 2,
@@ -27,90 +52,101 @@ function DialogBox:init(defs)
             tex = assets.graphics.system.window.window01,
         })
     end
-    if self.portrait ~= nil then
-        self.quads = generateQuads(self.portrait.image, PORTRAIT_W, PORTRAIT_H)
+    if message.portrait ~= nil then
+        message.quads = generateQuads(message.portrait.image, PORTRAIT_W, PORTRAIT_H)
     end
-    self.mainWindow = Window({
-        x = 0,
-        y = GAME_H - DIALOG_H * TILE_H,
-        width = DIALOG_W,
-        height = DIALOG_H,
-        tex = assets.graphics.system.window.window01,
-    })
-    self.pointer = Sprite({
-        texture = assets.graphics.system.window.window01,
-        animation = assets.animations.blinking_pointer,
-        firstAnim = "pointer",
-        width = TILE_W / 2,
-        height = TILE_H / 2,
-    })
 
     local speed = config.speed or 3
     if speed == 1 then
-        self.threshold = 0.04
+        message.threshold = 0.04
     elseif speed == 2 then
-        self.threshold = 0.02
+        message.threshold = 0.02
     elseif speed == 3 then
-        self.threshold = 0.016
+        message.threshold = 0.016
     elseif speed == 4 then
-        self.threshold = 0.01
+        message.threshold = 0.01
     elseif speed == 5 then 
-        self.threshold = 0.005
+        message.threshold = 0.005
     end
 
-    self.finished = false
-    self.timer = 0
-    self.subString = ""
-    self.subStringIdx = 1
-    self.currentText = 1
+    message.onEnd = config.onEnd
+
+    DialogBox.push(message)
+end
+
+function DialogBox.push(message)
+    if DialogBox.first > DialogBox.last then
+        MenuManager.push(DialogBox)
+    end
+    local last = DialogBox.last + 1
+    DialogBox.last = last
+    DialogBox.messages[last] = message
+end
+
+function DialogBox.pop()
+    local message = DialogBox.messages[DialogBox.first]
+    if message.onEnd ~= nil then
+        message.onEnd()
+    end
+    message = nil
+    DialogBox.first = DialogBox.first + 1
+    if DialogBox.first > DialogBox.last then
+        MenuManager.pop()
+    end
 end
 
 function DialogBox:onConfirm(dt)
-    if self.finished then
-        self.currentText = self.currentText + 1
-        self.finished = false
-        self.subStringIdx = 0
-        if self.currentText > #self.text then
-            MenuManager.pop()
-        end
-    elseif self.skippable then
-        self.subString = self.text[self.currentText]
-        self.finished = true
+    local message = DialogBox.messages[DialogBox.first]
+    if DialogBox.finished then
+        DialogBox.pop()
+        DialogBox.finished = false
+        DialogBox.subStringIdx = 0
+        DialogBox.subString = ""
+    elseif message.skippable then
+        DialogBox.subString = message.text
+        DialogBox.finished = true
     end
 end
 
 function DialogBox:update(dt)
-    if self.finished then
-        self.pointer:update(dt)
+    local message = DialogBox.messages[DialogBox.first]
+    if DialogBox.finished then
+        DialogBox.pointer:update(dt)
     else
-        self.timer = self.timer + dt
-        if self.timer > self.threshold then
-            self.subString = string.sub(self.text[self.currentText], 1, self.subStringIdx)
-            self.subStringIdx = self.subStringIdx + 1
-            if self.subStringIdx > #self.text[self.currentText] then
-                self.finished = true
+        DialogBox.timer = DialogBox.timer + dt
+        if DialogBox.timer > message.threshold then
+            DialogBox.subString = string.sub(message.text, 1, DialogBox.subStringIdx)
+            DialogBox.subStringIdx = DialogBox.subStringIdx + 1
+            if DialogBox.subStringIdx > #message.text then
+                DialogBox.finished = true
             end
-            self.timer = 0
+            DialogBox.timer = 0
         end
     end
 end
 
 function DialogBox:draw()
-    if self.titleWindow ~= nil then
-        self.titleWindow:draw()
-        love.graphics.print(self.title, TILE_W, GAME_H - DIALOG_H * TILE_H - TILE_H * 1.75)
+    local message = DialogBox.messages[DialogBox.first]
+
+    if message.titleWindow ~= nil then
+        message.titleWindow:draw()
+        love.graphics.print(message.title, TILE_W, GAME_H - DIALOG_H * TILE_H - TILE_H * 1.75)
     end
-    self.mainWindow:draw()
+
+    DialogBox.mainWindow:draw()
+
     local xPadding = 0
-    if self.portrait ~= nil then
-        love.graphics.draw(self.portrait.image, self.quads[self.portrait.quad], TILE_W * 0.75, GAME_H - DIALOG_H * TILE_H + TILE_H, 0, TILE_SCALE_X, TILE_SCALE_Y)
+    if message.portrait ~= nil then
+        love.graphics.draw(message.portrait.image, message.quads[message.portrait.quad], TILE_W * 0.75, GAME_H - DIALOG_H * TILE_H + TILE_H, 0, TILE_SCALE_X, TILE_SCALE_Y)
         xPadding = PORTRAIT_W
     end
-    local _, wrappedText = love.graphics.getFont():getWrap(self.subString, (self.width - 2) * TILE_W - xPadding)
+
+    local _, wrappedText = love.graphics.getFont():getWrap(DialogBox.subString, (DialogBox.mainWindow.width - 2) * TILE_W - xPadding)
     for textId, text in ipairs(wrappedText) do
         love.graphics.print(text, TILE_W + xPadding, GAME_H - (DIALOG_H + 0.25) * TILE_H + textId * TILE_H)
     end
-    if self.finished then
-        self.pointer:draw(GAME_W - TILE_W * 2, GAME_H - TILE_H)
+
+    if DialogBox.finished then
+        DialogBox.pointer:draw(GAME_W - TILE_W * 2, GAME_H - TILE_H)
     end
 end
