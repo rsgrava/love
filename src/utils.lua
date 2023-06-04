@@ -1,5 +1,17 @@
 require "src/constants"
 
+function deepCopy(table)
+    local newTable = {}
+    for k, v in pairs(table) do
+        if type(v) == "table" then
+            newTable[k] = deepCopy(v);
+        else
+            newTable[k] = v
+        end
+    end
+    return newTable
+end
+
 function generateQuads(tex, quadWidth, quadHeight)
     local width = tex:getWidth() / quadWidth
     local height = tex:getHeight() / quadHeight
@@ -19,7 +31,7 @@ function generateQuads(tex, quadWidth, quadHeight)
 end
 
 function getCharacterAnimation(quad)
-    local animSet = assets.animations.character
+    local animSet = deepCopy(assets.animations.character)
     for animId, anim in pairs(animSet) do
         for frameId, frame in pairs(anim.frames) do
             local offsetX = (quad % 4) * CHARACTER_FRAMES
