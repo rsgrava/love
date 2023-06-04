@@ -17,3 +17,15 @@ function generateQuads(tex, quadWidth, quadHeight)
 
     return quads
 end
+
+function getCharacterAnimation(quad)
+    local animSet = assets.animations.character
+    for animId, anim in pairs(animSet) do
+        for frameId, frame in pairs(anim.frames) do
+            local offsetX = (quad % 4) * CHARACTER_FRAMES
+            local offsetY = math.floor(quad / 4) * CHARACTER_FRAMES * CHARACTERS_PER_COL
+            anim.frames[frameId] = frame + offsetX + offsetY
+        end
+    end
+    return animSet
+end
