@@ -1,5 +1,4 @@
-Class = require("libs/class")
-require("src/constants")
+
 require("src/window")
 
 DialogBox = Class{}
@@ -8,7 +7,11 @@ function DialogBox:init(defs)
     self.text = defs.text
     self.title = defs.title
     self.portrait = defs.portrait or nil
-    self.skippable = defs.skippable or true
+    if defs.skippable == nil then
+        self.skippable = true
+    else
+        self.skippable = defs.skippable
+    end
 
     self.width = DIALOG_W
     self.height = DIALOG_H
