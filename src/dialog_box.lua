@@ -23,7 +23,7 @@ function DialogBox:init(defs)
             y = GAME_H - DIALOG_H * TILE_H - 2 * TILE_H,
             width = len + 2,
             height = 2,
-            tex = assets.graphics.menu,
+            tex = assets.graphics.system.window.window01,
         })
     end
     if self.portrait ~= nil then
@@ -88,7 +88,7 @@ end
 function DialogBox:draw()
     if self.titleWindow ~= nil then
         self.titleWindow:draw()
-        love.graphics.print(self.title, TILE_W, GAME_H - DIALOG_H * TILE_H - TILE_H * 1.25)
+        love.graphics.print(self.title, TILE_W, GAME_H - DIALOG_H * TILE_H - TILE_H * 1.75)
     end
     self.mainWindow:draw()
     local xPadding = 0
