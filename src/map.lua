@@ -21,7 +21,7 @@ function Map.load(map)
 
     for tileset_id, tileset in ipairs(map.tilesets) do
         tileset = require("assets/tilesets/"..tileset.name)
-        Map.tilesets[tileset_id] = assets.graphics[tileset.name]
+        Map.tilesets[tileset_id] = assets.graphics.tilesets[tileset.name]
         Map.tileset_quads[tileset_id] = generateQuads(Map.tilesets[tileset_id], TILE_W, TILE_H)
         Map.animations[tileset_id] = {}
         for tile_id, tile in pairs(tileset.tiles) do
@@ -159,7 +159,7 @@ function Map.drawLayer(layer_id, layer)
             local tileset_id = Map.tileset_ids[layer_id][tile_id]
             local texture = Map.tilesets[tileset_id]
             local quad = Map.tileset_quads[tileset_id][tile]
-            local x = math.floor((tile_id - 1) % Map.width)
+            local x = (tile_id - 1) % Map.width
             local y = math.floor((tile_id - 1) / Map.width)
             love.graphics.draw(
                 texture,
