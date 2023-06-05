@@ -162,7 +162,7 @@ function DialogBox:draw()
 
     local xPadding = 0
     if message.portrait ~= nil then
-        love.graphics.draw(message.portrait.image, message.quads[message.portrait.quad], TILE_W * 0.75, GAME_H - DIALOG_H * TILE_H + TILE_H, 0, TILE_SCALE_X, TILE_SCALE_Y)
+        love.graphics.draw(message.portrait.image, message.quads[message.portrait.quad], TILE_W * 0.75, GAME_H - DIALOG_H * TILE_H + TILE_H)
         xPadding = PORTRAIT_W
     end
 
