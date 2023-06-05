@@ -60,87 +60,42 @@ function exploration:update(dt)
     if not ActorManager.hasAutorun() then
         if MenuManager.isEmpty() then
             if Input:down("run") then
-                self.player.speed = 2
+                self.playerActor.speed = 2
             else
-                self.player.speed = 1
+                self.playerActor.speed = 1
             end
 
             local direction = self:getDirInput()
             if direction == "up" then
-                if self.player:tryMoveUp() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tileX, self.player.tileY - 1)
+                if self.playerActor:tryMoveUp() == "collides" then
+                    ActorManager.tryTouchMid(self.playerActor.tileX, self.playerActor.tileY - 1)
                 end
             elseif direction == "down" then
-                if self.player:tryMoveDown() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tileX, self.player.tileY + 1)
+                if self.playerActor:tryMoveDown() == "collides" then
+                    ActorManager.tryTouchMid(self.playerActor.tileX, self.playerActor.tileY + 1)
                 end
             elseif direction == "left" then
-                if self.player:tryMoveLeft() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tileX - 1, self.player.tileY)
+                if self.playerActor:tryMoveLeft() == "collides" then
+                    ActorManager.tryTouchMid(self.playerActor.tileX - 1, self.playerActor.tileY)
                 end
             elseif direction == "right" then
-                if self.player:tryMoveRight() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tileX + 1, self.player.tileY)
+                if self.playerActor:tryMoveRight() == "collides" then
+                    ActorManager.tryTouchMid(self.playerActor.tileX + 1, self.playerActor.tileY)
                 end
             elseif Input:pressed("action") then
-                if self.player.state == "idle" then
-                    if self.player.direction == "up" then
-                        ActorManager.tryAction(self.player.direction, self.player.tileX, self.player.tileY - 1)
-                    elseif self.player.direction == "down" then
-                        ActorManager.tryAction(self.player.direction, self.player.tileX, self.player.tileY + 1)
-                    elseif self.player.direction == "left" then
-                        ActorManager.tryAction(self.player.direction, self.player.tileX - 1, self.player.tileY)
-                    elseif self.player.direction == "right" then
-                        ActorManager.tryAction(self.player.direction, self.player.tileX + 1, self.player.tileY)
+                if self.playerActor.state == "idle" then
+                    if self.playerActor.direction == "up" then
+                        ActorManager.tryAction(self.playerActor.direction, self.playerActor.tileX, self.playerActor.tileY - 1)
+                    elseif self.playerActor.direction == "down" then
+                        ActorManager.tryAction(self.playerActor.direction, self.playerActor.tileX, self.playerActor.tileY + 1)
+                    elseif self.playerActor.direction == "left" then
+                        ActorManager.tryAction(self.playerActor.direction, self.playerActor.tileX - 1, self.playerActor.tileY)
+                    elseif self.playerActor.direction == "right" then
+                        ActorManager.tryAction(self.playerActor.direction, self.playerActor.tileX + 1, self.playerActor.tileY)
                     end
                 end
             elseif Input:pressed("menu") then
-                MenuManager.push(SelectionBox:init({
-                    x = 0,
-                    y = 0,
-                    rows = 8,
-                    cols = 1,
-                    width = 7,
-                    moveSound = assets.audio.move_cursor,
-                    confirmSound = assets.audio.confirm,
-                    cancelSound = assets.audio.cancel,
-                    disabledSound = assets.audio.disabled,
-                    items = {
-                        {
-                            name = "Item",
-                            enabled = false
-                        },
-                        {
-                            name = "Skill",
-                            enabled = false
-                        },
-                        {
-                            name = "Equip",
-                            enabled = false
-                        },
-                        {
-                            name = "Status",
-                            enabled = false
-                        },
-                        {
-                            name = "Formation",
-                            enabled = false
-                        },
-                        {
-                            name = "Options",
-                            enabled = false
-                        },
-                        {
-                            name = "Save",
-                            enabled = false
-                        },
-                        {
-                            name = "Quit",
-                            onConfirm = love.event.quit,
-                            enabled = true
-                        },
-                    }
-                }))
+                MenuManager.push(PauseMenu())
             end
             ActorManager.update(dt)
         else
