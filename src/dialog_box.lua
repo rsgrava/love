@@ -40,8 +40,6 @@ function DialogBox.say(text, config)
         message.skippable = config.skippable
     end
 
-    message.width = DIALOG_W
-    message.height = DIALOG_H
     if message.title ~= nil then
         local len = math.ceil(love.graphics.getFont():getWidth(message.title) / TILE_W)
         message.titleWindow = Window({
@@ -70,6 +68,7 @@ function DialogBox.say(text, config)
     end
 
     message.onEnd = config.onEnd
+    message.options = config.options
 
     DialogBox.push(message)
 end
@@ -95,6 +94,27 @@ function DialogBox.pop()
     end
 end
 
+function DialogBox.onFinish()
+    DialogBox.finished = true
+    local message = DialogBox.messages[DialogBox.first]
+    if message.options ~= nil then
+        local selectionBox = SelectionBox({
+            x = 0,
+            y = 0,
+            rows = #message.options,
+            cols = 1,
+            window_tex = assets.graphics.system.window.window01,
+            move_sound = assets.audio.move_cursor,
+            confirm_sound = assets.audio.confirm,
+            cancel_sound = assets.audio.cancel,
+            disabled_sound = assets.audio.disabled,
+            items = message.options
+        })
+        selectionBox:setPos(GAME_W - selectionBox:getWidth(), GAME_H - DIALOG_H * TILE_H - selectionBox:getHeight())
+        MenuManager.push(selectionBox)
+    end
+end
+
 function DialogBox:onConfirm(dt)
     local message = DialogBox.messages[DialogBox.first]
     if DialogBox.finished then
@@ -104,7 +124,7 @@ function DialogBox:onConfirm(dt)
         DialogBox.subString = ""
     elseif message.skippable then
         DialogBox.subString = message.text
-        DialogBox.finished = true
+        DialogBox.onFinish()
     end
 end
 
@@ -112,13 +132,19 @@ function DialogBox:update(dt)
     local message = DialogBox.messages[DialogBox.first]
     if DialogBox.finished then
         DialogBox.pointer:update(dt)
+        if message.options ~= nil then
+            DialogBox.pop()
+            DialogBox.finished = false
+            DialogBox.subStringIdx = 0
+            DialogBox.subString = ""
+        end
     else
         DialogBox.timer = DialogBox.timer + dt
         if DialogBox.timer > message.threshold then
             DialogBox.subString = string.sub(message.text, 1, DialogBox.subStringIdx)
             DialogBox.subStringIdx = DialogBox.subStringIdx + 1
             if DialogBox.subStringIdx > #message.text then
-                DialogBox.finished = true
+                DialogBox.onFinish()
             end
             DialogBox.timer = 0
         end
@@ -141,7 +167,7 @@ function DialogBox:draw()
         xPadding = PORTRAIT_W
     end
 
-    local _, wrappedText = love.graphics.getFont():getWrap(DialogBox.subString, (DialogBox.mainWindow.width - 2) * TILE_W - xPadding)
+    local _, wrappedText = love.graphics.getFont():getWrap(DialogBox.subString, (DIALOG_W - 2) * TILE_W - xPadding)
     for textId, text in ipairs(wrappedText) do
         love.graphics.print(text, TILE_W + xPadding, GAME_H - (DIALOG_H + 0.25) * TILE_H + textId * TILE_H)
     end

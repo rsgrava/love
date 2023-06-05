@@ -168,7 +168,6 @@ function exploration:getDirInput()
         self.ignoredDir = "none"
     end
 
-
     return dir
 end
 
