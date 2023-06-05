@@ -33,15 +33,14 @@ function SelectionBox:init(defs)
         self.total_rows = self.total_rows + 1
     end
     self.top_row = 0
-    self.window_tex = defs.window_tex
     self.window = Window({
         x = defs.x,
         y = defs.y,
         width = self.width,
         height = self.height,
-        tex = self.window_tex,
+        tex = windowTex,
     })
-    self.pointerQuad = generateQuads(defs.window_tex, TILE_W / 2, TILE_H / 2, 0, TILE_H / 4)[14]
+    self.pointerQuad = generateQuads(windowTex, TILE_W / 2, TILE_H / 2, 0, TILE_H / 4)[14]
 
     for itemId, item in ipairs(self.items) do
         if item.enabled == nil then
@@ -169,5 +168,5 @@ function SelectionBox:draw()
     end
 
     -- draw selection pointer
-    love.graphics.draw(self.window_tex, self.pointerQuad, self.x + self.selection_x * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selection_y * TILE_H + TILE_H * 1.25)
+    love.graphics.draw(windowTex, self.pointerQuad, self.x + self.selection_x * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selection_y * TILE_H + TILE_H * 1.25)
 end

@@ -17,10 +17,10 @@ DialogBox = {
         y = GAME_H - DIALOG_H * TILE_H,
         width = DIALOG_W,
         height = DIALOG_H,
-        tex = assets.graphics.system.window.window01,
+        tex = windowTex,
     }),
     pointer = Sprite({
-        texture = assets.graphics.system.window.window01,
+        texture = windowTex,
         animation = assets.animations.blinking_pointer,
         firstAnim = "pointer",
         width = TILE_W / 2,
@@ -47,7 +47,7 @@ function DialogBox.say(text, config)
             y = GAME_H - DIALOG_H * TILE_H - 2 * TILE_H,
             width = len + 2,
             height = 2,
-            tex = assets.graphics.system.window.window01,
+            tex = windowTex,
         })
     end
     if message.portrait ~= nil then
@@ -103,7 +103,7 @@ function DialogBox.onFinish()
             y = 0,
             rows = #message.options,
             cols = 1,
-            window_tex = assets.graphics.system.window.window01,
+            window_tex = windowTex,
             move_sound = assets.audio.move_cursor,
             confirm_sound = assets.audio.confirm,
             cancel_sound = assets.audio.cancel,

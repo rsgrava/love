@@ -15,12 +15,11 @@ function mainMenuState:enter()
             y = 0,
             rows = 4,
             cols = 1,
-            window_tex = assets.graphics.system.window.window01,
-            pointer_tex = assets.graphics.hand_pointer,
             move_sound = assets.audio.move_cursor,
             confirm_sound = assets.audio.confirm,
             cancel_sound = assets.audio.cancel,
             disabled_sound = assets.audio.disabled,
+            onClose = function() end,
             items = {
                 {
                     name = "New Game",

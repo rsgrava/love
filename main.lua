@@ -15,6 +15,7 @@ function love.load()
                      {fullscreen = true, resizable = true, vsync = true})
     love.window.setTitle("love")
     love.graphics.setFont(assets.fonts.DotFont(48))
+    windowTex = assets.graphics.system.window.window01
     math.randomseed(os.time())
 
     love.joystick.loadGamepadMappings("gamecontrollerdb.txt")

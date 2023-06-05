@@ -63,7 +63,6 @@ function exploration:update(dt)
                     rows = 8,
                     cols = 1,
                     width = 7,
-                    window_tex = assets.graphics.system.window.window01,
                     move_sound = assets.audio.move_cursor,
                     confirm_sound = assets.audio.confirm,
                     cancel_sound = assets.audio.cancel,
