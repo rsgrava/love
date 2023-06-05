@@ -38,7 +38,6 @@
             y = defs.y,
             width = self.width,
             height = self.height,
-            tex = windowTex,
         })
         self.pointerQuad = generateQuads(windowTex, TILE_W / 2, TILE_H / 2, 0, TILE_H / 4)[14]
 
