@@ -3,12 +3,50 @@ Timer = require("libs/timer")
 require("src/actor")
 require("src/actor_manager")
 require("src/map")
+require("src/party_member")
+require("src/pause_menu")
 
 exploration = {}
 
 function exploration:enter()
-    self.player = Actor(assets.actors.player, {}, 0, 0)
-    ActorManager.add(self.player)
+    self.playerActor = Actor(assets.actors.player, {}, 0, 0)
+    ActorManager.add(self.playerActor)
+    Party.addMember(PartyMember({
+        name = "Adrian",
+        image = assets.graphics.faces.Fa_Actor1,
+        quad = 0,
+        class = "Knight",
+        level = 3,
+        maxHp = 500,
+        maxMp = 35,
+    }))
+    Party.addMember(PartyMember({
+        name = "Christina",
+        image = assets.graphics.faces.Fa_Actor1,
+        quad = 1,
+        class = "Priestess",
+        level = 3,
+        maxHp = 300,
+        maxMp = 300,
+    }))
+    Party.addMember(PartyMember({
+        name = "Alex",
+        image = assets.graphics.faces.Fa_Actor1,
+        quad = 2,
+        class = "Wizard",
+        level = 3,
+        maxHp = 2000,
+        maxMp = 4000,
+    }))
+    Party.addMember(PartyMember({
+        name = "Sophitia",
+        image = assets.graphics.faces.Fa_Actor1,
+        quad = 3,
+        class = "Paladin",
+        level = 2,
+        maxHp = 400,
+        maxMp = 150,
+    }))
     Map.load(assets.maps.test)
     self.camera = Camera()
     self.ignoredDir = "none"
@@ -147,7 +185,7 @@ function exploration:getDirInput()
     end
 
     if dirX ~= "none" and dirY ~= "none" then
-        if self.player.direction == "up" or self.player.direction == "down" then -- turning (y axis)
+        if self.playerActor.direction == "up" or self.playerActor.direction == "down" then -- turning (y axis)
             if self.ignoredDir ~= "none" then
                 if dirX == self.ignoredDir then
                     dir = dirY
@@ -158,7 +196,7 @@ function exploration:getDirInput()
                 self.ignoredDir = dirY
                 dir = dirX
             end
-        elseif self.player.direction == "left" or self.player.direction == "right" then -- turning (x axis)
+        elseif self.playerActor.direction == "left" or self.playerActor.direction == "right" then -- turning (x axis)
             if self.ignoredDir ~= "none" then
                 if dirY == self.ignoredDir then
                     dir = dirX
@@ -190,8 +228,8 @@ function exploration:getDirInput()
 end
 
 function exploration:centerCamera()
-    local camX = self.player.x + (TILE_W - GAME_W) / 2
-    local camY = self.player.y + (TILE_H - GAME_H) / 2
+    local camX = self.playerActor.x + (TILE_W - GAME_W) / 2
+    local camY = self.playerActor.y + (TILE_H - GAME_H) / 2
     local mapWidth = Map.width * TILE_W
     local mapHeight = Map.height * TILE_W
 
