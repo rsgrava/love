@@ -22,10 +22,10 @@ function ActorManager.clear()
     ActorManager.autorun = false
 end
 
-function ActorManager.checkCollision(layer, tile_x, tile_y)
+function ActorManager.checkCollision(layer, tileX, tileY)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.priority == layer and not actor.through and
-           actor.tile_x == tile_x and actor.tile_y == tile_y then
+           actor.tileX == tileX and actor.tileY == tileY then
             return true
         end
     end
@@ -48,9 +48,9 @@ function ActorManager.setAutorun(state)
     ActorManager.autorun = state
 end
 
-function ActorManager.tryAction(playerDirection, tile_x, tile_y)
+function ActorManager.tryAction(playerDirection, tileX, tileY)
     for actorId, actor in pairs(ActorManager.actors) do
-        if actor.class == "action" and actor.tile_x == tile_x and actor.tile_y == tile_y then
+        if actor.class == "action" and actor.tileX == tileX and actor.tileY == tileY then
             if not actor.directionFix then
                 if playerDirection == "up" then
                     actor.direction = "down"
@@ -68,36 +68,36 @@ function ActorManager.tryAction(playerDirection, tile_x, tile_y)
     end
 end
 
-function ActorManager.tryTouchMid(tile_x, tile_y)
+function ActorManager.tryTouchMid(tileX, tileY)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.class == "player_touch" and actor.priority == "mid" and
-           actor.tile_x == tile_x and actor.tile_y == tile_y then
+           actor.tileX == tileX and actor.tileY == tileY then
             actor:tryActivate()
             break
         end
     end
 end
 
-function ActorManager.tryTouchLowHigh(tile_x, tile_y)
+function ActorManager.tryTouchLowHigh(tileX, tileY)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.class == "player_touch" and 
            (actor.priority == "low" or actor.priority == "high") and
-           actor.tile_x == tile_x and actor.tile_y == tile_y then
+           actor.tileX == tileX and actor.tileY == tileY then
             actor:tryActivate()
             break
         end
     end
 end
 
-function ActorManager.tryEventTouch(actor, tile_x, tile_y)
+function ActorManager.tryEventTouch(actor, tileX, tileY)
     local player = ActorManager.getPlayer()
-    if player.tile_x == tile_x and player.tile_y == tile_y then
+    if player.tileX == tileX and player.tileY == tileY then
         actor:tryActivate()
     end
 end
 
 function ActorManager.update(dt)
-    for actor_id, actor in pairs(ActorManager.actors) do
+    for actorId, actor in pairs(ActorManager.actors) do
         actor:update(dt)
     end
 end

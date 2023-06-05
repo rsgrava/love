@@ -20,36 +20,36 @@ function Window:draw()
     for y = 0, self.height - 1 do
         for x = 0, self.width - 1 do
             -- middle
-            local corner_quad = nil
+            local cornerQuad = nil
             if x == 0 and y == 0 then
                 -- top left
-                corner_quad = 4
+                cornerQuad = 4
             elseif x == self.width - 1 and y == 0 then
                 -- top right
-                corner_quad = 7
+                cornerQuad = 7
             elseif y == 0 then
                 -- top middle
-                corner_quad = 5
+                cornerQuad = 5
             elseif y == self.height - 1 and x == 0 then
                 -- bottom left
-                corner_quad = 28
+                cornerQuad = 28
             elseif y == self.height - 1 and x == self.width - 1 then
                 -- bottom right
-                corner_quad = 31
+                cornerQuad = 31
             elseif x == 0 then
                 -- left middle
-                corner_quad = 12
+                cornerQuad = 12
             elseif x == self.width - 1 then
                 -- right middle
-                corner_quad = 15
+                cornerQuad = 15
             elseif y == self.height - 1 then
                 -- bottom middle
-                corner_quad = 29
+                cornerQuad = 29
             end
             
             love.graphics.draw(self.tex, self.quads[0], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
-            if corner_quad ~= nil then
-                love.graphics.draw(self.tex, self.quads[corner_quad], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
+            if cornerQuad ~= nil then
+                love.graphics.draw(self.tex, self.quads[cornerQuad], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
             end
         end
     end

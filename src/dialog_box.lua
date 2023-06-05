@@ -103,11 +103,10 @@ function DialogBox.onFinish()
             y = 0,
             rows = #message.options,
             cols = 1,
-            window_tex = windowTex,
-            move_sound = assets.audio.move_cursor,
-            confirm_sound = assets.audio.confirm,
-            cancel_sound = assets.audio.cancel,
-            disabled_sound = assets.audio.disabled,
+            moveSound = assets.audio.move_cursor,
+            confirmSound = assets.audio.confirm,
+            cancelSound = assets.audio.cancel,
+            disabledSound = assets.audio.disabled,
             items = message.options
         })
         selectionBox:setPos(GAME_W - selectionBox:getWidth(), GAME_H - DIALOG_H * TILE_H - selectionBox:getHeight())

@@ -30,30 +30,30 @@ function exploration:update(dt)
             local direction = self:getDirInput()
             if direction == "up" then
                 if self.player:tryMoveUp() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y - 1)
+                    ActorManager.tryTouchMid(self.player.tileX, self.player.tileY - 1)
                 end
             elseif direction == "down" then
                 if self.player:tryMoveDown() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tile_x, self.player.tile_y + 1)
+                    ActorManager.tryTouchMid(self.player.tileX, self.player.tileY + 1)
                 end
             elseif direction == "left" then
                 if self.player:tryMoveLeft() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tile_x - 1, self.player.tile_y)
+                    ActorManager.tryTouchMid(self.player.tileX - 1, self.player.tileY)
                 end
             elseif direction == "right" then
                 if self.player:tryMoveRight() == "collides" then
-                    ActorManager.tryTouchMid(self.player.tile_x + 1, self.player.tile_y)
+                    ActorManager.tryTouchMid(self.player.tileX + 1, self.player.tileY)
                 end
             elseif Input:pressed("action") then
                 if self.player.state == "idle" then
                     if self.player.direction == "up" then
-                        ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y - 1)
+                        ActorManager.tryAction(self.player.direction, self.player.tileX, self.player.tileY - 1)
                     elseif self.player.direction == "down" then
-                        ActorManager.tryAction(self.player.direction, self.player.tile_x, self.player.tile_y + 1)
+                        ActorManager.tryAction(self.player.direction, self.player.tileX, self.player.tileY + 1)
                     elseif self.player.direction == "left" then
-                        ActorManager.tryAction(self.player.direction, self.player.tile_x - 1, self.player.tile_y)
+                        ActorManager.tryAction(self.player.direction, self.player.tileX - 1, self.player.tileY)
                     elseif self.player.direction == "right" then
-                        ActorManager.tryAction(self.player.direction, self.player.tile_x + 1, self.player.tile_y)
+                        ActorManager.tryAction(self.player.direction, self.player.tileX + 1, self.player.tileY)
                     end
                 end
             elseif Input:pressed("menu") then
@@ -63,10 +63,10 @@ function exploration:update(dt)
                     rows = 8,
                     cols = 1,
                     width = 7,
-                    move_sound = assets.audio.move_cursor,
-                    confirm_sound = assets.audio.confirm,
-                    cancel_sound = assets.audio.cancel,
-                    disabled_sound = assets.audio.disabled,
+                    moveSound = assets.audio.move_cursor,
+                    confirmSound = assets.audio.confirm,
+                    cancelSound = assets.audio.cancel,
+                    disabledSound = assets.audio.disabled,
                     items = {
                         {
                             name = "Item",
@@ -126,54 +126,54 @@ end
 
 function exploration:getDirInput()
     local dir = "none"
-    local dir_x = "none"
-    local dir_y = "none"
+    local dirX = "none"
+    local dirY = "none"
 
-    local held_up = Input:down("up")
-    local held_down = Input:down("down")
-    local held_left = Input:down("left")
-    local held_right = Input:down("right")
+    local heldUp = Input:down("up")
+    local heldDown = Input:down("down")
+    local heldLeft = Input:down("left")
+    local heldRight = Input:down("right")
 
-    if held_up and not held_down then
-        dir_y = "up"
-    elseif held_down and not held_up then
-        dir_y = "down"
+    if heldUp and not heldDown then
+        dirY = "up"
+    elseif heldDown and not heldUp then
+        dirY = "down"
     end
 
-    if held_left and not held_right then
-        dir_x = "left"
-    elseif held_right and not held_left then
-        dir_x = "right"
+    if heldLeft and not heldRight then
+        dirX = "left"
+    elseif heldRight and not heldLeft then
+        dirX = "right"
     end
 
-    if dir_x ~= "none" and dir_y ~= "none" then
+    if dirX ~= "none" and dirY ~= "none" then
         if self.player.direction == "up" or self.player.direction == "down" then -- turning (y axis)
             if self.ignoredDir ~= "none" then
-                if dir_x == self.ignoredDir then
-                    dir = dir_y
+                if dirX == self.ignoredDir then
+                    dir = dirY
                 else
-                    dir = dir_x
+                    dir = dirX
                 end
             else
-                self.ignoredDir = dir_y
-                dir = dir_x
+                self.ignoredDir = dirY
+                dir = dirX
             end
         elseif self.player.direction == "left" or self.player.direction == "right" then -- turning (x axis)
             if self.ignoredDir ~= "none" then
-                if dir_y == self.ignoredDir then
-                    dir = dir_x
+                if dirY == self.ignoredDir then
+                    dir = dirX
                 else
-                    dir = dir_y
+                    dir = dirY
                 end
             else
-                self.ignoredDir = dir_x
-                dir = dir_y
+                self.ignoredDir = dirX
+                dir = dirY
             end
         end
-    elseif dir_x == "none" and dir_y ~= "none" then -- straight line (y axis)
-        dir = dir_y
-    elseif dir_x ~= "none" and dir_y == "none" then -- straight line (x axis)
-        dir = dir_x
+    elseif dirX == "none" and dirY ~= "none" then -- straight line (y axis)
+        dir = dirY
+    elseif dirX ~= "none" and dirY == "none" then -- straight line (x axis)
+        dir = dirX
     end
 
     if self.ignoredDir == "up" and Input:released("up") then
@@ -190,32 +190,32 @@ function exploration:getDirInput()
 end
 
 function exploration:centerCamera()
-    local cam_x = self.player.x + (TILE_W - GAME_W) / 2
-    local cam_y = self.player.y + (TILE_H - GAME_H) / 2
-    local map_width = Map.width * TILE_W
-    local map_height = Map.height * TILE_W
+    local camX = self.player.x + (TILE_W - GAME_W) / 2
+    local camY = self.player.y + (TILE_H - GAME_H) / 2
+    local mapWidth = Map.width * TILE_W
+    local mapHeight = Map.height * TILE_W
 
-    if cam_x < 0 then
-        cam_x = 0
+    if camX < 0 then
+        camX = 0
     end
-    if cam_x + GAME_W > map_width then
-        if map_width < GAME_W then
-            cam_x = (map_width - GAME_W) / 2
+    if camX + GAME_W > mapWidth then
+        if mapWidth < GAME_W then
+            camX = (mapWidth - GAME_W) / 2
         else
-            cam_x = map_width - GAME_W
+            camX = mapWidth - GAME_W
         end
     end
 
-    if cam_y < 0 then
-        cam_y = 0
+    if camY < 0 then
+        camY = 0
     end
-    if cam_y + GAME_H > map_height then
-        if map_height < GAME_H then
-            cam_y = (map_height - GAME_H) / 2
+    if camY + GAME_H > mapHeight then
+        if mapHeight < GAME_H then
+            camY = (mapHeight - GAME_H) / 2
         else
-            cam_y = map_height - GAME_H
+            camY = mapHeight - GAME_H
         end
     end
 
-    self.camera:lookAt(math.floor(cam_x + love.graphics.getWidth() / 2), math.floor(cam_y + love.graphics.getHeight() / 2))
+    self.camera:lookAt(math.floor(camX + love.graphics.getWidth() / 2), math.floor(camY + love.graphics.getHeight() / 2))
 end

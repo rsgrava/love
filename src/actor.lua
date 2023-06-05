@@ -5,7 +5,7 @@ require("src/map")
 
 Actor = Class{}
 
-function Actor:init(actor, props, tile_x, tile_y)
+function Actor:init(actor, props, tileX, tileY)
     -- General definitions
     self.name = actor.name
     self.class = actor.class or nil
@@ -49,10 +49,10 @@ function Actor:init(actor, props, tile_x, tile_y)
     self.moveTimer = 0
     
     -- Positioning
-    self.tile_x = tile_x
-    self.tile_y = tile_y
-    self.x = self.tile_x * TILE_W - (actor.width or 0) + TILE_W
-    self.y = self.tile_y * TILE_H - (actor.height or 0) + TILE_H
+    self.tileX = tileX
+    self.tileY = tileY
+    self.x = self.tileX * TILE_W - (actor.width or 0) + TILE_W
+    self.y = self.tileY * TILE_H - (actor.height or 0) + TILE_H
 end
 
 function Actor:checkCondition()
@@ -63,17 +63,17 @@ function Actor:checkCondition()
     end
 end
 
-function Actor:collides(target_x, target_y)
-    if target_x < 0 or target_y < 0 or
-       target_x > Map.width - 1 or target_y > Map.height
-       or Map:collides(target_x, target_y) then
+function Actor:collides(targetX, targetY)
+    if targetX < 0 or targetY < 0 or
+       targetX > Map.width - 1 or targetY > Map.height
+       or Map:collides(targetX, targetY) then
        return true
     end
 
     if self.through then
         return false
     end
-    return ActorManager.checkCollision(self.priority, target_x, target_y)
+    return ActorManager.checkCollision(self.priority, targetX, targetY)
 end
 
 function Actor:isMoving()
@@ -98,15 +98,15 @@ function Actor:tryMoveUp()
         if not self.directionFix then
             self.direction = "up"
         end
-        local target_y = self.tile_y - 1
-        if self:collides(self.tile_x, target_y) then
+        local targetY = self.tileY - 1
+        if self:collides(self.tileX, targetY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_y = target_y
+            self.tileY = targetY
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y - TILE_W}})
             return "moved"
         end
@@ -119,15 +119,15 @@ function Actor:tryMoveDown()
         if not self.directionFix then
             self.direction = "down"
         end
-        local target_y = self.tile_y + 1
-        if self:collides(self.tile_x, target_y) then
+        local targetY = self.tileY + 1
+        if self:collides(self.tileX, targetY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_y = target_y
+            self.tileY = targetY
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {y = self.y + TILE_W}})
             return "moved"
         end
@@ -140,15 +140,15 @@ function Actor:tryMoveLeft()
         if not self.directionFix then
             self.direction = "left"
         end
-        local target_x = self.tile_x - 1
-        if self:collides(target_x, self.tile_y) then
+        local targetX = self.tileX - 1
+        if self:collides(targetX, self.tileY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_x = target_x
+            self.tileX = targetX
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W}})
             return "moved"
         end
@@ -161,15 +161,15 @@ function Actor:tryMoveRight()
         if not self.directionFix then
             self.direction = "right"
         end
-        local target_x = self.tile_x + 1
-        if self:collides(target_x, self.tile_y) then
+        local targetX = self.tileX + 1
+        if self:collides(targetX, self.tileY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_x = target_x
+            self.tileX = targetX
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W}})
             return "moved"
         end
@@ -186,17 +186,17 @@ function Actor:tryMoveUpLeft()
                 self.direction = "left"
             end
         end
-        local target_x = self.tile_x - 1
-        local target_y = self.tile_y - 1
-        if self:collides(target_x, target_y) then
+        local targetX = self.tileX - 1
+        local targetY = self.tileY - 1
+        if self:collides(targetX, targetY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_x = target_x
-            self.tile_y = target_y
+            self.tileX = targetX
+            self.tileY = targetY
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W, y = self.y - TILE_H}})
             return "moved"
         end
@@ -213,17 +213,17 @@ function Actor:tryMoveUpRight()
                 self.direction = "right"
             end
         end
-        local target_x = self.tile_x + 1
-        local target_y = self.tile_y - 1
-        if self:collides(target_x, target_y) then
+        local targetX = self.tileX + 1
+        local targetY = self.tileY - 1
+        if self:collides(targetX, targetY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_x = target_x
-            self.tile_y = target_y
+            self.tileX = targetX
+            self.tileY = targetY
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W, y = self.y - TILE_H}})
             return "moved"
         end
@@ -240,17 +240,17 @@ function Actor:tryMoveDownLeft()
                 self.direction = "left"
             end
         end
-        local target_x = self.tile_x - 1
-        local target_y = self.tile_y + 1
-        if self:collides(target_x, target_y) then
+        local targetX = self.tileX - 1
+        local targetY = self.tileY + 1
+        if self:collides(targetX, targetY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_x = target_x
-            self.tile_y = target_y
+            self.tileX = targetX
+            self.tileY = targetY
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x - TILE_W, y = self.y + TILE_H}})
             return "moved"
         end
@@ -267,17 +267,17 @@ function Actor:tryMoveDownRight()
                 self.direction = "right"
             end
         end
-        local target_x = self.tile_x + 1
-        local target_y = self.tile_y + 1
-        if self:collides(target_x, target_y) then
+        local targetX = self.tileX + 1
+        local targetY = self.tileY + 1
+        if self:collides(targetX, targetY) then
             return "collides"
         else
             self.state = "move"
             if self.animated ~= "fixed" and self.sprite ~= nil then
                 self.sprite:resume()
             end
-            self.tile_x = target_x
-            self.tile_y = target_y
+            self.tileX = targetX
+            self.tileY = targetY
             Timer.tween(ACTOR_MOVE_DURATION / self.speed, {[self] = {x = self.x + TILE_W, y = self.y + TILE_H}})
             return "moved"
         end
@@ -336,11 +336,11 @@ function Actor:tryJump()
     -- TODO
 end
 
-function Actor:teleport(tile_x, tile_y)
-    self.tile_x = tile_x
-    self.tile_y = tile_y
-    self.x = tile_x * TILE_W
-    self.y = tile_y * TILE_H - CHARACTER_H + TILE_H
+function Actor:teleport(tileX, tileY)
+    self.tileX = tileX
+    self.tileY = tileY
+    self.x = tileX * TILE_W
+    self.y = tileY * TILE_H - CHARACTER_H + TILE_H
 end
 
 function Actor:tryFaceUp()
@@ -545,14 +545,14 @@ function Actor:update(dt)
         self.sprite:update(dt)
     end
 
-    if self.state ~= "idle" and self.tile_x * TILE_W == self.x
-       and self.tile_y * TILE_H - self.height + TILE_H == self.y then
+    if self.state ~= "idle" and self.tileX * TILE_W == self.x
+       and self.tileY * TILE_H - self.height + TILE_H == self.y then
         self.state = "idle"
         if self.class == "player" then
-            ActorManager.tryTouchLowHigh(self.tile_x, self.tile_y)
+            ActorManager.tryTouchLowHigh(self.tileX, self.tileY)
         elseif self.class == "event_touch" and 
                (self.priority == "low" or self.priority == "high") then
-            ActorManager.tryEventTouch(self, self.tile_x, self.tile_y)
+            ActorManager.tryEventTouch(self, self.tileX, self.tileY)
         end
     end
 
@@ -572,13 +572,13 @@ function Actor:update(dt)
             end
             if moved == "collides" and self.class == "event_touch" then
                 if self.direction == "up" then
-                    ActorManager.tryEventTouch(self, self.tile_x, self.tile_y - 1)
+                    ActorManager.tryEventTouch(self, self.tileX, self.tileY - 1)
                 elseif self.direction == "down" then
-                    ActorManager.tryEventTouch(self, self.tile_x, self.tile_y + 1)
+                    ActorManager.tryEventTouch(self, self.tileX, self.tileY + 1)
                 elseif self.direction == "left" then
-                    ActorManager.tryEventTouch(self, self.tile_x - 1, self.tile_y)
+                    ActorManager.tryEventTouch(self, self.tileX - 1, self.tileY)
                 elseif self.direction == "right" then
-                    ActorManager.tryEventTouch(self, self.tile_x + 1, self.tile_y)
+                    ActorManager.tryEventTouch(self, self.tileX + 1, self.tileY)
                 end
             end
         end

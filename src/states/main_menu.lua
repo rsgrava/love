@@ -15,10 +15,10 @@ function mainMenuState:enter()
             y = 0,
             rows = 4,
             cols = 1,
-            move_sound = assets.audio.move_cursor,
-            confirm_sound = assets.audio.confirm,
-            cancel_sound = assets.audio.cancel,
-            disabled_sound = assets.audio.disabled,
+            moveSound = assets.audio.move_cursor,
+            confirmSound = assets.audio.confirm,
+            cancelSound = assets.audio.cancel,
+            disabledSound = assets.audio.disabled,
             onClose = function() end,
             items = {
                 {
