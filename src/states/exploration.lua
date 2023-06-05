@@ -60,27 +60,46 @@ function exploration:update(dt)
                 MenuManager.push(SelectionBox:init({
                     x = 0,
                     y = 0,
-                    rows = 3,
+                    rows = 8,
                     cols = 1,
+                    width = 7,
                     window_tex = assets.graphics.system.window.window01,
-                    pointer_tex = assets.graphics.hand_pointer,
                     move_sound = assets.audio.move_cursor,
                     confirm_sound = assets.audio.confirm,
                     cancel_sound = assets.audio.cancel,
                     disabled_sound = assets.audio.disabled,
                     items = {
                         {
-                            name = "Start Game",
-                            onConfirm = function() Gamestate.switch(exploration) end,
-                            enabled = true
+                            name = "Item",
+                            enabled = false
+                        },
+                        {
+                            name = "Skill",
+                            enabled = false
+                        },
+                        {
+                            name = "Equip",
+                            enabled = false
+                        },
+                        {
+                            name = "Status",
+                            enabled = false
+                        },
+                        {
+                            name = "Formation",
+                            enabled = false
                         },
                         {
                             name = "Options",
                             enabled = false
                         },
                         {
+                            name = "Save",
+                            enabled = false
+                        },
+                        {
                             name = "Quit",
-                            onConfirm = function() love.event.quit() end,
+                            onConfirm = love.event.quit,
                             enabled = true
                         },
                     }

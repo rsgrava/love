@@ -15,6 +15,7 @@ function SelectionBox:init(defs)
     self.confirm_sound = defs.confirm_sound or nil
     self.cancel_sound = defs.cancel_sound or nil
     self.disabled_sound = defs.disabled_sound or nil
+    self.onClose = defs.onClose or MenuManager.pop
     self.items = defs.items or {}
 
     self.itemWidth = 0
@@ -25,7 +26,7 @@ function SelectionBox:init(defs)
             self.itemWidth = len
         end
     end
-    self.width = self.cols * self.itemWidth + 1 + self.cols
+    self.width = defs.width or self.cols * self.itemWidth + 1 + self.cols
     self.height = self.rows + 2
     self.total_rows = math.floor(#self.items / self.cols)
     if #self.items % self.cols > 0 then
@@ -94,9 +95,8 @@ function SelectionBox:onConfirm()
 end
 
 function SelectionBox:onCancel()
-    local func = self.items[self:getCurrentItem() + 1].onCancel
-    if func ~= nil then
-        func()
+    if self.onClose ~= nil then
+        self.onClose()
     end
     if self.cancel_sound ~= nil then
         love.audio.play(self.cancel_sound)
