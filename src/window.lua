@@ -7,8 +7,7 @@ function Window:init(defs)
     self.y = defs.y
     self.width = defs.width
     self.height = defs.height
-    self.tex = defs.tex
-    self.quads = generateQuads(self.tex, TILE_W / 2, TILE_H / 2)
+    self.quads = generateQuads(windowTex, TILE_W / 2, TILE_H / 2)
 end
 
 function Window:setPos(x, y)
@@ -47,9 +46,9 @@ function Window:draw()
                 cornerQuad = 29
             end
             
-            love.graphics.draw(self.tex, self.quads[0], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
+            love.graphics.draw(windowTex, self.quads[0], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
             if cornerQuad ~= nil then
-                love.graphics.draw(self.tex, self.quads[cornerQuad], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
+                love.graphics.draw(windowTex, self.quads[cornerQuad], self.x + x * TILE_W, self.y + y * TILE_H, 0, 2, 2)
             end
         end
     end
