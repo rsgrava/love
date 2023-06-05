@@ -9,7 +9,7 @@ function PauseMenu:init()
     self.selection = SelectionBox:init({
         x = 0,
         y = 0,
-        rows = 8,
+        rows = 5,
         cols = 1,
         width = 7,
         moveSound = assets.audio.move_cursor,
@@ -86,7 +86,7 @@ function PauseMenu:onRight()
 end
 
 function PauseMenu:update(dt)
-    
+    self.selection:update(dt)
 end
 
 function PauseMenu:draw()
