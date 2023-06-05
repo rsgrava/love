@@ -42,6 +42,12 @@ function SelectionBox:init(defs)
     })
     self.pointerQuad = generateQuads(defs.window_tex, TILE_W / 2, TILE_H / 2, 0, TILE_H / 4)[14]
 
+    for itemId, item in ipairs(self.items) do
+        if item.enabled == nil then
+            item.enabled = true
+        end
+    end
+
     return self
 end
 
@@ -158,10 +164,10 @@ function SelectionBox:draw()
         if not item.enabled then
             love.graphics.setColor(love.math.colorFromBytes(128, 128, 128))
         end
-        love.graphics.print(item.name, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 1) * TILE_H)
+        love.graphics.print(item.name, self.x + x * TILE_W * (self.itemWidth + 1) + TILE_W, self.y + (y + 0.8) * TILE_H)
         love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
     end
 
     -- draw selection pointer
-    love.graphics.draw(self.window_tex, self.pointerQuad, self.x + self.selection_x * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selection_y * TILE_H + TILE_H * 1.5)
+    love.graphics.draw(self.window_tex, self.pointerQuad, self.x + self.selection_x * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selection_y * TILE_H + TILE_H * 1.25)
 end
