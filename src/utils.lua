@@ -43,3 +43,13 @@ function getCharacterAnimation(quad)
     end
     return animSet
 end
+
+controlsEnabled = true
+
+function enableControls()
+    controlsEnabled = true
+end
+
+function disableControls()
+    controlsEnabled = false
+end

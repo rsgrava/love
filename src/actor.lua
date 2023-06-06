@@ -583,11 +583,7 @@ function Actor:update(dt)
             end
         end
 
-        if self.class == "autorun" then
-            self:tryActivate()
-        end
-
-        if self.class == "parallel" then
+        if self.class == "autorun" or self.class == "parallel" then
             self:tryActivate()
         end
     end
