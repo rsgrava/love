@@ -8,13 +8,13 @@ function Party.addMember(member)
 end
 
 function Party.addGold(num)
-    party.gold = party.gold + num
+    Party.gold = Party.gold + num
 end
 
 function Party.subtractGold(num)
-    if party.gold - num < 0 then
+    if Party.gold - num < 0 then
         return false
     end
-    party.gold = party.gold - num
+    Party.gold = Party.gold - num
     return true
 end
