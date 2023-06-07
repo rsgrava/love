@@ -16,6 +16,7 @@ function Map.load(map)
     Map.fgAnimationInstances = {}
     Map.bgAnimationInstances = {}
     Map.animationsEnabled = true
+    ActorManager.clear()
     Map.width = map.width
     Map.height = map.height
 
