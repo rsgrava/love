@@ -15,12 +15,14 @@ function SelectionBox:init(defs)
     self.items = defs.items or {}
     self.active = false
 
-    self.itemWidth = 0
-    self.itemHeight = 0
-    for k, v in pairs(defs.items) do
-        local len = math.ceil(love.graphics.getFont():getWidth(v.name) / TILE_W)
-        if len > self.itemWidth then
-            self.itemWidth = len
+    self.itemWidth = defs.itemWidth
+    if self.itemWidth == nil then
+        self.itemWidth = 0
+        for k, v in pairs(defs.items) do
+            local len = math.ceil(love.graphics.getFont():getWidth(v.name) / TILE_W)
+            if len > self.itemWidth then
+                self.itemWidth = len
+            end
         end
     end
     self.width = defs.width or self.cols * self.itemWidth + 1 + self.cols
