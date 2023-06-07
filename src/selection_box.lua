@@ -174,7 +174,7 @@ function SelectionBox:draw()
         love.graphics.draw(windowTex, self.pointerQuad, self.x + self.selectionX * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selectionY * TILE_H + TILE_H * 1.25)
 
         -- draw blinking arrow
-        if self.topRow ~= self.totalRows - self.rows then
+        if self.topRow < self.totalRows - self.rows then
             self.blinkingArrow:draw(self.x + (self.width - 1.25) * TILE_W,self.y + (self.height - 1) * TILE_H)
         end
     end
