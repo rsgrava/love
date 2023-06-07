@@ -93,6 +93,17 @@ function Actor:tryActivate()
     end
 end
 
+function Actor:setPosition(tileX, tileY, direction)
+    self.state = "idle"
+    self.tileX = tileX
+    self.tileY = tileY
+    self.x = tileX * TILE_W
+    self.y = tileY * TILE_H
+    if direction ~= nil then
+        self.direction = direction
+    end
+end
+
 function Actor:tryMoveUp()
     if self.state == "idle" then
         if not self.directionFix then
