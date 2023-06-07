@@ -19,6 +19,7 @@ function Map.load(map)
     ActorManager.clear()
     Map.width = map.width
     Map.height = map.height
+    Map.name = map.properties.name
 
     for tilesetId, tileset in ipairs(map.tilesets) do
         tileset = require("assets/tilesets/"..tileset.name)
