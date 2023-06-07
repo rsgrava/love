@@ -103,10 +103,6 @@ function DialogBox.onFinish()
             y = 0,
             rows = #message.options,
             cols = 1,
-            moveSound = assets.audio.move_cursor,
-            confirmSound = assets.audio.confirm,
-            cancelSound = assets.audio.cancel,
-            disabledSound = assets.audio.disabled,
             items = message.options
         })
         selectionBox:setPos(GAME_W - selectionBox:getWidth(), GAME_H - DIALOG_H * TILE_H - selectionBox:getHeight())
@@ -131,7 +127,8 @@ function DialogBox:update(dt)
     local message = DialogBox.messages[DialogBox.first]
     if DialogBox.finished then
         DialogBox.pointer:update(dt)
-        if message.options ~= nil then
+        -- if the player has finished selecting, pop dialog
+        if self.active and message.options ~= nil then
             DialogBox.pop()
             DialogBox.finished = false
             DialogBox.subStringIdx = 0
