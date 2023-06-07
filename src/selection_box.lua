@@ -13,6 +13,7 @@ function SelectionBox:init(defs)
     self.selectionY = defs.selectionY or 0
     self.onClose = defs.onClose or MenuManager.pop
     self.items = defs.items or {}
+    self.active = false
 
     self.itemWidth = 0
     self.itemHeight = 0
@@ -162,11 +163,13 @@ function SelectionBox:draw()
         love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
     end
 
-    -- draw selection pointer
-    love.graphics.draw(windowTex, self.pointerQuad, self.x + self.selectionX * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selectionY * TILE_H + TILE_H * 1.25)
+    if self.active then
+        -- draw selection pointer
+        love.graphics.draw(windowTex, self.pointerQuad, self.x + self.selectionX * TILE_W * (self.itemWidth + 1) + TILE_W / 3, self.y + self.selectionY * TILE_H + TILE_H * 1.25)
 
-    -- draw blinking arrow
-    if self.topRow ~= self.totalRows - self.rows then
-        self.blinkingArrow:draw(self.x + (self.width - 1.25) * TILE_W,self.y + (self.height - 1) * TILE_H)
+        -- draw blinking arrow
+        if self.topRow ~= self.totalRows - self.rows then
+            self.blinkingArrow:draw(self.x + (self.width - 1.25) * TILE_W,self.y + (self.height - 1) * TILE_H)
+        end
     end
 end
