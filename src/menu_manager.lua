@@ -8,6 +8,7 @@ end
 
 function MenuManager.pop()
     MenuManager.menus[#MenuManager.menus] = nil
+    love.audio.play(assets.audio.cancel)
 end
 
 function MenuManager.clear()

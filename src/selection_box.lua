@@ -11,10 +11,6 @@ function SelectionBox:init(defs)
     self.rows = defs.rows
     self.selectionX = defs.selectionX or 0
     self.selectionY = defs.selectionY or 0
-    self.moveSound = defs.moveSound or nil
-    self.confirmSound = defs.confirmSound or nil
-    self.cancelSound = defs.cancelSound or nil
-    self.disabledSound = defs.disabledSound or nil
     self.onClose = defs.onClose or MenuManager.pop
     self.items = defs.items or {}
 
@@ -89,22 +85,15 @@ function SelectionBox:onConfirm()
         if func ~= nil then
             func()
         end
-        if self.confirmSound ~= nil then
-            love.audio.play(self.confirmSound)
-        end
+        love.audio.play(assets.audio.confirm)
     else
-        if self.disabledSound ~= nil then
-            love.audio.play(self.disabledSound)
-        end
+        love.audio.play(assets.audio.disabled)
     end
 end
 
 function SelectionBox:onCancel()
     if self.onClose ~= nil then
         self.onClose()
-    end
-    if self.cancelSound ~= nil then
-        love.audio.play(self.cancelSound)
     end
 end
 
@@ -113,9 +102,8 @@ function SelectionBox:onUp()
     if self.selectionY < 0 then
         self.selectionY = 0
         self.topRow = math.max(self.topRow - 1, 0)
-    elseif self.moveSound ~= nil then
-        love.audio.play(self.moveSound)
     end
+    love.audio.play(assets.audio.move_cursor)
     self:clampSelection()
 end
 
@@ -127,9 +115,8 @@ function SelectionBox:onDown()
         if self.topRow > self.totalRows - self.rows then
             self.topRow = self.totalRows - self.rows
         end
-    elseif self.moveSound ~= nil then
-        love.audio.play(self.moveSound)
     end
+    love.audio.play(assets.audio.move_cursor)
     self:clampSelection()
 end
 
@@ -137,9 +124,8 @@ function SelectionBox:onLeft()
     self.selectionX = self.selectionX - 1
     if self.selectionX < 0 then
         self.selectionX = 0
-    elseif self.moveSound ~= nil then
-        love.audio.play(self.moveSound)
     end
+    love.audio.play(assets.audio.move_cursor)
     self:clampSelection()
 end
 
@@ -147,9 +133,8 @@ function SelectionBox:onRight()
     self.selectionX = self.selectionX + 1
     if self.selectionX > self.cols - 1 then
         self.selectionX = self.cols - 1
-    elseif self.moveSound ~= nil then
-        love.audio.play(self.moveSound)
     end
+    love.audio.play(assets.audio.move_cursor)
     self:clampSelection()
 end
 
