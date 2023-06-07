@@ -57,7 +57,7 @@ function Party.getItemsClass(class)
             end
             if itemCount > 1 and itemCount < 10 then
                 name = name.."(x0"..itemCount..')'
-            elseif itemCount > 10 then
+            elseif itemCount >= 10 then
                 name = name.."(x"..itemCount..')'
             end
             table.insert(
