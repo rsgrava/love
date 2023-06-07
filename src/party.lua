@@ -8,11 +8,17 @@ function Party.addMember(member)
     Party.members[#Party.members + 1] = member
 end
 
-function Party.addItem(itemName)
+function Party.addItem(itemName, count)
+    local count = count or 1
     if Party.items[itemName] == nil then
-        Party.items[itemName] = 1
+        Party.items[itemName] = math.min(count, 99)
+        return true
+    elseif
+        Party.items[itemName] == 99 then
+        return false
     else
-        Party.items[itemName] = Party.items[itemName] + 1
+        Party.items[itemName] = math.min(Party.items[itemName] + count, 99)
+        return true
     end
 end
 
