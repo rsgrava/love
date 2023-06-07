@@ -1,4 +1,5 @@
 require("libs/class")
+require("src/item_menu")
 require("src/menu_manager")
 require("src/party")
 require("src/window")
@@ -6,7 +7,7 @@ require("src/window")
 PauseMenu = Class{}
 
 function PauseMenu:init()
-    self.selection = SelectionBox:init({
+    self.selection = SelectionBox({
         x = 0,
         y = 0,
         rows = 8,
@@ -19,7 +20,8 @@ function PauseMenu:init()
         items = {
             {
                 name = "Item",
-                enabled = false
+                enabled = true,
+                onConfirm = openItemMenu,
             },
             {
                 name = "Skill",
@@ -111,4 +113,8 @@ function PauseMenu:draw()
         love.graphics.print(member.mp..'/'..member.maxMp, 9 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H * 1.75)
     end
     love.graphics.print(Party.gold..'G', (self.selection:getWidth() - love.graphics.getFont():getWidth(Party.gold..'G')) / 2, self.selection:getHeight() + 0.75 * TILE_H)
+end
+
+function openItemMenu()
+    MenuManager.push(ItemMenu())
 end
