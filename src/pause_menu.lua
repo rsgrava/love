@@ -13,10 +13,6 @@ function PauseMenu:init()
         rows = 8,
         cols = 1,
         width = 7,
-        moveSound = assets.audio.move_cursor,
-        confirmSound = assets.audio.confirm,
-        cancelSound = assets.audio.cancel,
-        disabledSound = assets.audio.disabled,
         items = {
             {
                 name = "Item",
@@ -54,6 +50,7 @@ function PauseMenu:init()
             },
         }
     })
+    self.selection.active = true
 
     self.statsWindow = Window({
         x = 7 * TILE_W,
