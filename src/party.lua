@@ -9,47 +9,51 @@ function Party.addMember(member)
 end
 
 function Party.addItem(itemName)
-    if items[itemName] == nil then
-        items[itemName] = 1
+    if Party.items[itemName] == nil then
+        Party.items[itemName] = 1
     else
-        items[itemName] = items[itemName] + 1
+        Party.items[itemName] = Party.items[itemName] + 1
     end
 end
 
 function Party.removeItem(itemName)
-    if items[itemName] ~= nil then
-        items[itemName] = items[itemName] - 1
-        if items[itemName] == 0 then
-            items[itemName] = nil
+    if Party.items[itemName] ~= nil then
+        Party.items[itemName] = Party.items[itemName] - 1
+        if Party.items[itemName] == 0 then
+            Party.items[itemName] = nil
         end
     end
 end
 
 function Party.removeItemAll(itemName)
-    items[itemName] = nil
+    Party.items[itemName] = nil
 end
 
 function Party.hasItem(itemName)
-    return items[itemName] ~= nil
+    return Party.items[itemName] ~= nil
 end
 
-function Party.getItemsList()
+function Party.getItemsClass(class)
     items = {}
-    for itemName, item in pairs(Party.items) do
-        local enabled = false
-        if database.items[itemName].usable == nil then
-            enabled = true
-        else
-            enabled = database.items[itemName].usable()
+    for itemName, itemCount in pairs(Party.items) do
+        local item = database.items[itemName]
+        if item.class == class then
+            -- either bool, nil (defaults to false) or function that rets bool
+            local enabled = item.usable
+            if enabled == nil then
+                enabled = false
+            elseif type(enabled) == "function" then
+                enabled = item.usable()
+            end
+            table.insert(
+                items,
+                {
+                    name = itemName,
+                    enabled = enabled,
+                    onConfirm = nil,
+                }
+            )
         end
-        table.insert(
-            items,
-            {
-                name = itemName,
-                enabled = enabled,
-                onConfirm = nil,
-            }
-        )
     end
     return items
 end
