@@ -3,11 +3,19 @@ MenuManager = {
 }
 
 function MenuManager.push(menu)
+    if #MenuManager.menus > 0 then
+        MenuManager.menus[#MenuManager.menus].active = false
+    end
     MenuManager.menus[#MenuManager.menus + 1] = menu
+    menu.active = true
 end
 
 function MenuManager.pop()
+    MenuManager.menus[#MenuManager.menus].active = false
     MenuManager.menus[#MenuManager.menus] = nil
+    if #MenuManager.menus > 0 then
+        MenuManager.menus[#MenuManager.menus].active = true
+    end
     love.audio.play(assets.audio.cancel)
 end
 
@@ -45,8 +53,10 @@ function MenuManager.update(dt)
             MenuManager.menus[#MenuManager.menus]:onRight(dt)
         end
     else
-        if MenuManager.menus[#MenuManager.menus].update ~= nil then
-            MenuManager.menus[#MenuManager.menus]:update(dt)
+        for menuId, menu in ipairs(MenuManager.menus) do
+            if menu.update ~= nil then
+                menu:update(dt)
+            end
         end
     end
 end
