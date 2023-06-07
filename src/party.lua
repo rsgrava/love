@@ -45,16 +45,23 @@ function Party.getItemsClass(class)
             elseif type(enabled) == "function" then
                 enabled = item.usable()
             end
+            local name = itemName
+            if itemCount > 1 and itemCount < 10 then
+                name = name.."(x0"..itemCount..')'
+            elseif itemCount > 10 then
+                name = name.."(x"..itemCount..')'
+            end
             table.insert(
                 items,
                 {
-                    name = itemName,
+                    name = name,
                     enabled = enabled,
                     onConfirm = nil,
                 }
             )
         end
     end
+    table.sort(items, function(a, b) return a.name < b.name end)
     return items
 end
 

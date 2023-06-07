@@ -53,6 +53,7 @@ function ItemMenu:init()
         rows = 5,
         cols = 2,
         width = 17,
+        itemWidth = 7.5,
         items = items,
     })
 end
@@ -101,12 +102,16 @@ function ItemMenu:update(dt)
     if self.active then
         self.descriptionBox.text = ""
     else
-        self.descriptionBox.text = database.items[itemSelection:getSelectedName()].description
+        local itemName = itemSelection:getSelectedName()
+        itemName = string.gsub(itemName, "%(x%d%d%)", '')
+        self.descriptionBox.text = database.items[itemName].description
     end
 end
 
 function ItemMenu:draw()
     self.classSelection:draw()
     self.descriptionBox:draw()
-    itemSelection:draw()
+    if self.active then
+        itemSelection:draw()
+    end
 end
