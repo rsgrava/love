@@ -52,6 +52,9 @@ function Party.getItemsClass(class)
                 enabled = item.usable()
             end
             local name = itemName
+            while #name < 9 do
+                name = name..' '
+            end
             if itemCount > 1 and itemCount < 10 then
                 name = name.."(x0"..itemCount..')'
             elseif itemCount > 10 then

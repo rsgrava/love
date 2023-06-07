@@ -53,7 +53,7 @@ function ItemMenu:init()
         rows = 5,
         cols = 2,
         width = 17,
-        itemWidth = 7.5,
+        itemWidth = 7,
         items = items,
     })
 end
@@ -104,6 +104,7 @@ function ItemMenu:update(dt)
     else
         local itemName = itemSelection:getSelectedName()
         itemName = string.gsub(itemName, "%(x%d%d%)", '')
+        itemName = string.gsub(itemName, "%s+", '')
         self.descriptionBox.text = database.items[itemName].description
     end
 end
