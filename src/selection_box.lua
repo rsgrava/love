@@ -73,8 +73,8 @@ end
 
 function SelectionBox:clampSelection()
     if self:getCurrentItem() >= #self.items then
-        self.selectionY = math.floor(#self.items / self.cols) - self.topRow
-        self.selectionX = #self.items % self.cols - 1
+        self.selectionY = math.floor(#self.items / self.cols) - (self.topRow + 1)
+        self.selectionX = math.max(#self.items % self.cols - 1, 0)
     end
 end
 
