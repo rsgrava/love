@@ -79,16 +79,22 @@ function SelectionBox:clampSelection()
     end
 end
 
+function SelectionBox:getSelectedName()
+    return self.items[self:getCurrentItem() + 1].name
+end
+
 function SelectionBox:onConfirm()
-    local item = self.items[self:getCurrentItem() + 1]
-    if item.enabled then
-        local func = self.items[self:getCurrentItem() + 1].onConfirm
-        if func ~= nil then
-            func()
+    if #self.items ~= 0 then
+        local item = self.items[self:getCurrentItem() + 1]
+        if item.enabled then
+            local func = self.items[self:getCurrentItem() + 1].onConfirm
+            if func ~= nil then
+                func()
+            end
+            love.audio.play(assets.audio.confirm)
+        else
+            love.audio.play(assets.audio.disabled)
         end
-        love.audio.play(assets.audio.confirm)
-    else
-        love.audio.play(assets.audio.disabled)
     end
 end
 
