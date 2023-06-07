@@ -18,7 +18,11 @@ function ActorManager.delete(actor)
 end
 
 function ActorManager.clear()
-    ActorManager.actors = {}
+    for actorId, actor in pairs(ActorManager.actors) do
+        if actor.class ~= "player" then
+            ActorManager.actors[actorId] = nil
+        end
+    end
     ActorManager.autorun = false
 end
 
@@ -82,7 +86,7 @@ function ActorManager.tryTouchLowHigh(tileX, tileY)
     for actorId, actor in pairs(ActorManager.actors) do
         if actor.class == "player_touch" and 
            (actor.priority == "low" or actor.priority == "high") and
-           actor.tileX == tileX and actor.tileY == tileY then
+           actor.tileX == tileX and actor.tileY == tileY - 1 then
             actor:tryActivate()
             break
         end
