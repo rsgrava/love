@@ -4,9 +4,13 @@ Party = {
     gold = 0,
 }
 
+-- General
+
 function Party.addMember(member)
     Party.members[#Party.members + 1] = member
 end
+
+-- Inventory
 
 function Party.addItem(itemName, count)
     local count = count or 1
@@ -74,6 +78,8 @@ function Party.getItemsClass(class)
     return items
 end
 
+-- Gold
+
 function Party.addGold(num)
     Party.gold = Party.gold + num
 end
@@ -84,4 +90,28 @@ function Party.subtractGold(num)
     end
     Party.gold = Party.gold - num
     return true
+end
+
+-- XP
+
+function Party.addXp(charId, xp)
+    local character = Party.members[charId]
+    local class = database.classes[character.class]
+    local xpToNext = class:xpToLevel(character.level + 1)
+
+    -- if max level, do nothing
+    if xpToNext == nil then
+        return
+    end
+
+    -- add xp and check for level up
+    character.xp = character.xp + xp
+    if character.xp > xpToNext then
+        character:levelUp()
+    end
+
+    -- cap XP
+    if character.level == MAX_LEVEL then
+        character.xp = xpToNext
+    end
 end
