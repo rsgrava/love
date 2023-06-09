@@ -106,7 +106,7 @@ function Map.load(map)
             end
         elseif layer.type == "objectgroup" then
             for objectId, object in pairs(layer.objects) do
-                local actor = assets.actors[object.name]
+                local actor = database.actors[object.name]
                 local props = object.properties
                 local tileX = math.floor(object.x / TILE_W)
                 local tileY = math.floor(object.y / TILE_H) - 1
