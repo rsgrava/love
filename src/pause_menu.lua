@@ -101,13 +101,13 @@ function PauseMenu:draw()
     self.goldWindow:draw()
 
     for memberId, member in ipairs(Party.members) do
-        member:draw(7.5 * TILE_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825)
+        member:drawPortrait(7.5 * TILE_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825)
         love.graphics.print(member.name, 7.5 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825)
 
         love.graphics.print("HP", 7.5 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H)
         love.graphics.print("MP", 7.5 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H * 1.75)
-        love.graphics.print(member.hp..'/'..member.maxHp, 9 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H)
-        love.graphics.print(member.mp..'/'..member.maxMp, 9 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H * 1.75)
+        love.graphics.print(member.hp..'/'..member.stats.maxHp, 9 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H)
+        love.graphics.print(member.mp..'/'..member.stats.maxMp, 9 * TILE_W + PORTRAIT_W, memberId * TILE_H * 0.5 + (memberId - 1) * PORTRAIT_H * 0.825 + TILE_H * 1.75)
     end
     love.graphics.print(Party.gold..'G', (self.selection:getWidth() - love.graphics.getFont():getWidth(Party.gold..'G')) / 2, self.selection:getHeight() + 0.75 * TILE_H)
 end
