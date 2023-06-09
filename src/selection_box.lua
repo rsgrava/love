@@ -15,8 +15,7 @@ function SelectionBox:init(defs)
     self.items = defs.items or {}
     self.active = false
 
-    self.itemWidth = defs.itemWidth
-    if self.itemWidth == nil then
+    if defs.itemWidth == nil then
         self.itemWidth = 0
         for k, v in pairs(defs.items) do
             local len = math.ceil(love.graphics.getFont():getWidth(v.name) / TILE_W)
@@ -24,6 +23,8 @@ function SelectionBox:init(defs)
                 self.itemWidth = len
             end
         end
+    else
+        self.itemWidth = defs.itemWidth
     end
     self.width = defs.width or self.cols * self.itemWidth + 1 + self.cols
     self.height = self.rows + 2
