@@ -12,11 +12,18 @@ function Character:init(defs)
     self.stats = calcStartingStats(self.class, self.level)
     self.hp = self.stats.maxHp
     self.mp = self.stats.maxMp
-    self.equipment = {
-        weapon = nil,
-        armor = nil,
-        accessory = nil,
-    }
+    self.xp = xpToLevel(self.level)
+    if defs.equipment == nil then
+        self.equipment = {
+            weapon = nil,
+            secondary = nil,
+            helmet = nil,
+            armor = nil,
+            accessory = nil,
+        }
+    else
+        self.equipment = defs.equipment
+    end
 end
 
 -- General
@@ -42,7 +49,7 @@ function xpToLevel(level)
         return nil
     end
 
-    return math.floor(1000 * (level * 1.5))
+    return math.floor(1000 * (level ^ 1.5))
 end
 
 function calcStartingStats(class, level)
