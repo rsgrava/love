@@ -95,23 +95,23 @@ end
 -- XP
 
 function Party.addXp(charId, xp)
+    -- add xp
     local character = Party.members[charId]
-    local class = database.classes[character.class]
-    local xpToNext = class:xpToLevel(character.level + 1)
-
-    -- if max level, do nothing
-    if xpToNext == nil then
-        return
-    end
-
-    -- add xp and check for level up
     character.xp = character.xp + xp
-    if character.xp > xpToNext then
-        character:levelUp()
-    end
 
-    -- cap XP
-    if character.level == MAX_LEVEL then
-        character.xp = xpToNext
-    end
+    -- keep levelling until xp is no longer enough
+    repeat
+        local xpToNext = xpToLevel(character.level + 1)
+
+        -- if max level, cap xp and return
+        if xpToNext == nil then
+            character.xp = xpToLevel(character.level)
+            return
+        end
+
+        -- check for level up
+        if character.xp >= xpToNext then
+            character:levelUp()
+        end
+    until character.xp < xpToNext
 end
