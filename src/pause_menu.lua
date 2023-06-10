@@ -47,7 +47,7 @@ function PauseMenu:init()
             },
             {
                 name = "Quit",
-                onConfirm = love.event.quit,
+                onConfirm = onQuit,
                 enabled = true
             },
         }
@@ -148,4 +148,38 @@ end
 
 function openStatusMenu(charId)
     MenuManager.push(StatusMenu(Party.members[charId]))
+end
+
+function onQuit()
+    MenuManager.push(SelectionBox({
+        x = 0,
+        y = 0,
+        rows = 3,
+        cols = 1,
+        width = 7,
+        items = {
+            {
+                name = "To Title",
+                enabled = true,
+                onConfirm = toMainMenu,
+            },
+            {
+                name = "To Desktop",
+                enabled = true,
+                onConfirm = love.event.quit,
+            },
+            {
+                name = "Cancel",
+                enabled = true,
+                onConfirm = MenuManager.pop,
+            }
+        }
+    }))
+end
+
+function toMainMenu()
+    ActorManager.clear()
+    MenuManager.clear()
+    Party.members = {}
+    Gamestate.switch(mainMenuState)
 end
