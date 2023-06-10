@@ -2,6 +2,7 @@ require("libs/class")
 require("src/item_menu")
 require("src/menu_manager")
 require("src/party")
+require("src/status_menu")
 require("src/window")
 
 PauseMenu = Class{}
@@ -29,7 +30,8 @@ function PauseMenu:init()
             },
             {
                 name = "Status",
-                enabled = false
+                enabled = true,
+                onConfirm = openStatusSelectionMenu
             },
             {
                 name = "Formation",
@@ -114,4 +116,36 @@ end
 
 function openItemMenu()
     MenuManager.push(ItemMenu())
+end
+
+function openStatusSelectionMenu()
+    items = {}
+    for i = 1, 4 do
+        local character = Party.members[i]
+        if character == nil then
+            items[i] = {
+                name = "----",
+                enabled = false,
+            }
+        else
+            items[i] = {
+                name = character.name,
+                enabled = true,
+                onConfirm = function() MenuManager.push(StatusMenu(Party.members[i])) end,
+            }
+        end
+    end
+
+    MenuManager.push(SelectionBox({
+        x = 0,
+        y = 0,
+        rows = 4,
+        cols = 1,
+        width = 7,
+        items = items,
+    }))
+end
+
+function openStatusMenu(charId)
+    MenuManager.push(StatusMenu(Party.members[charId]))
 end
