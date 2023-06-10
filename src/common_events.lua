@@ -14,7 +14,7 @@ function teleportPlayer(self, dt, mapName, x, y, dir)
             wait(self, dt, 0.3)
             local mapName = self.props.map
             if Map.name ~= MapName then
-                Map.load(assets.maps[mapName])
+                Map.load(database.maps[mapName])
             end
             local player = ActorManager.getPlayer()
             player:setPosition(x, y, dir)

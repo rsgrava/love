@@ -13,6 +13,7 @@ function Character:init(defs)
     self.hp = self.stats.maxHp
     self.mp = self.stats.maxMp
     self.xp = xpToLevel(self.level)
+
     if defs.equipment == nil then
         self.equipment = {
             weapon = nil,
